@@ -609,8 +609,8 @@ public class CompleteMission extends SimpleMission {
 		 * Complete the method below to build your detector. More indications are given
 		 * in the method.
 		 */
-	    //final EventDetector constraintVisibilityDetector = createConstraintXDetector();
-		// 
+	    
+		// We create a visibility detector to provide to the propagator and track the events 
 		
 		EventDetector VisibilityDetector = createConstraintVisibilityDetector(targetSite);
 		
@@ -919,7 +919,6 @@ public class CompleteMission extends SimpleMission {
 		
 		// We create a Sensor model
 		SensorModel VisibilitySensorModel = new SensorModel(this.getSatellite().getAssembly(), Satellite.SENSOR_NAME);
-		
 		VisibilitySensorModel.addMaskingCelestialBody(this.getEarth());
 		
 		PVCoordinatesProvider sitePVCoordinates = new TopocentricFrame(
