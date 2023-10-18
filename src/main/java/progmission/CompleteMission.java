@@ -641,13 +641,13 @@ public class CompleteMission extends SimpleMission {
 		 * Develop the code in which you create your GenericCodingEventDetector and use
 		 * it to create a CodedEventsLogger here. You have some example code to help.
 		 */
-		final GenericCodingEventDetector codingEventXDetector = new GenericCodingEventDetector(constraint_Dazzling_Detector,
-				"Event starting the X phenomenon", "Event ending the X phenomenon", true, "Name of the X phenomenon");
-		final CodedEventsLogger eventXLogger = new CodedEventsLogger();
-		final EventDetector eventXDetector = eventXLogger.monitorDetector(codingEventXDetector);
+		final GenericCodingEventDetector codingDazzlingDetector = new GenericCodingEventDetector(constraint_Dazzling_Detector,
+				"Event starting the Dazzling phenomenon", "Event ending the Dazzling phenomenon", true, "Name of the Dazzling phenomenon");
+		final CodedEventsLogger eventDazzlingLogger = new CodedEventsLogger();
+		final EventDetector eventDazzlingDetector = eventDazzlingLogger.monitorDetector(codingDazzlingDetector);
 		// Then you add your logger to the propagator, it will monitor the event coded
 		// by the codingEventDetector
-		this.getSatellite().getPropagator().addEventDetector(eventXDetector);
+		this.getSatellite().getPropagator().addEventDetector(eventDazzlingDetector);
 
 		/**
 		 * Step 4 :
@@ -683,7 +683,7 @@ public class CompleteMission extends SimpleMission {
 		// Creating a Timeline to process the events : we are going to define one
 		// visibility Phenomenon by couple of events "start -> end" (linked to the
 		// increase and decrease of the g function of the visibility detector)
-		final Timeline phenomenonDazzlingTimeline = new Timeline(eventXLogger,
+		final Timeline phenomenonDazzlingTimeline = new Timeline(eventDazzlingLogger,
 				new AbsoluteDateInterval(this.getStartDate(), this.getEndDate()), null);
 
 		return phenomenonDazzlingTimeline;
@@ -769,7 +769,7 @@ public class CompleteMission extends SimpleMission {
 		PVCoordinatesProvider satelliteCoordinate = this.getSatellite().getPropagator();
 
 		/*Detector creation */
-		ThreeBodiesAngleDetector Dazzling_detector = new ThreeBodiesAngleDetector(satelliteCoordinate,sitePVCoordinates, this.getSun(),FastMath.toRadians(ConstantsBE.MAX_SUN_PHASE_ANGLE), MAXCHECK_EVENTS, TRESHOLD_EVENTS, EventDetector.Action.CONTINUE);
+		ThreeBodiesAngleDetector Dazzling_detector = new ThreeBodiesAngleDetector(sitePVCoordinates, this.getSun(),ThreeBodiesAngleDetector.BodyOrder.FIRST,FastMath.toRadians(ConstantsBE.MAX_SUN_PHASE_ANGLE), MAXCHECK_EVENTS, TRESHOLD_EVENTS, EventDetector.Action.CONTINUE);
 		return Dazzling_detector;
 	}
 
