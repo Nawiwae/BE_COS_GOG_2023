@@ -3,7 +3,7 @@ package progmission;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
+//bite
 import org.slf4j.Logger;
 
 import fr.cnes.sirius.patrius.attitudes.Attitude;
