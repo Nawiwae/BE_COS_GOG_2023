@@ -23,8 +23,10 @@ import fr.cnes.sirius.patrius.events.postprocessing.Timeline;
 import fr.cnes.sirius.patrius.events.sensor.SensorVisibilityDetector;
 import fr.cnes.sirius.patrius.frames.FramesFactory;
 import fr.cnes.sirius.patrius.frames.TopocentricFrame;
+import fr.cnes.sirius.patrius.math.util.FastMath;
 import fr.cnes.sirius.patrius.propagation.analytical.KeplerianPropagator;
 import fr.cnes.sirius.patrius.propagation.events.EventDetector;
+import fr.cnes.sirius.patrius.propagation.events.ThreeBodiesAngleDetector;
 import fr.cnes.sirius.patrius.time.AbsoluteDate;
 import fr.cnes.sirius.patrius.time.AbsoluteDateInterval;
 import fr.cnes.sirius.patrius.time.AbsoluteDateIntervalsList;
@@ -475,9 +477,12 @@ public class CompleteMission extends SimpleMission {
 		 * createSiteXTimeline method as a basis.
 		 */
 	    final Timeline timeline_visibility = createSiteVisibilityTimeline(targetSite);
+	    ProjectUtils.printTimeline(timeline_visibility);
 	    final Timeline timeline_illumination = createSiteSunIncidenceTimeline(targetSite);
+	    ProjectUtils.printTimeline(timeline_illumination);
 	    final Timeline timeline_dazzling = createSite_Dazzling_Timeline(targetSite);
-		// etc.
+	    ProjectUtils.printTimeline(timeline_dazzling);
+	
 
 		/**
 		 * Step 2 :
@@ -523,7 +528,7 @@ public class CompleteMission extends SimpleMission {
 		final AndCriterion visibilityANDillumination = new AndCriterion("Visibility", "Illumination",
 				"VisibilityAndIlllumination", "Ensure that the targeted site is visible and illuminated");
 		// Applying our criterion adds all the new phenonmena inside the global timeline
-		AndCriterion.applyTo(siteAccessTimeline);
+		visibilityANDillumination.applyTo(siteAccessTimeline);
 
 		// Then create an ElementTypeFilter that will filter all phenomenon not
 		// respecting the input condition you gave it
@@ -531,7 +536,7 @@ public class CompleteMission extends SimpleMission {
 		// Finally, we filter the global timeline to keep only X1 AND X2 phenomena
 		obsConditionFilter.applyTo(siteAccessTimeline);
 
-		final ElementTypeFilter DazzleConditionFilter = new ElementTypeFilter("Dazzling", True);
+		final ElementTypeFilter DazzleConditionFilter = new ElementTypeFilter("Dazzling", true);
 
 		DazzleConditionFilter.applyTo(siteAccessTimeline);
 
