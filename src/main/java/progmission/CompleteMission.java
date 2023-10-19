@@ -148,10 +148,17 @@ public class CompleteMission extends SimpleMission {
 		 * 
 		 * Please complete the code below.
 		 */
-	    final Site targetSite = this.getSiteList().get(0);
-	    final Timeline siteAccessTimeline = createSiteAccessTimeline(targetSite);
-		this.accessPlan.put(targetSite, siteAccessTimeline);
-		ProjectUtils.printTimeline(siteAccessTimeline);
+//	    final Site targetSite = this.getSiteList().get(0);
+//	    final Timeline siteAccessTimeline = createSiteAccessTimeline(targetSite);
+//		this.accessPlan.put(targetSite, siteAccessTimeline);
+//		ProjectUtils.printTimeline(siteAccessTimeline);
+		
+		// For each site, we create the corresponding timeline, and then add it to the HashMap accessPlan
+				for (Site targetSite : this.getSiteList()) {
+					Timeline siteAccessTimeline = createSiteAccessTimeline(targetSite);
+					this.accessPlan.put(targetSite, siteAccessTimeline);
+//					ProjectUtils.printTimeline(siteAccessTimeline);
+				}
 		
 		return this.accessPlan;
 	}
@@ -502,30 +509,30 @@ public class CompleteMission extends SimpleMission {
 		for (final Phenomenon phenom : timelineSunIncidence.getPhenomenaList()) {
 			siteAccessTimeline.addPhenomenon(phenom);
 		}
-		/*for (final Phenomenon phenom : timeline2.getPhenomenaList()) {
-			siteAccessTimeline.addPhenomenon(phenom);
-		}
-		*/
-
-		// Define and use your own criteria, here is an example (use the right strings
-		// defined when naming the phenomenon in the GenericCodingEventDetector)
-		final AndCriterion andCriterion = new AndCriterion("Name of the X1 phenomenon", "Name of the X2 phenomenon",
-				"Name of the X1 AND X2 phenomenon", "Comment about this phenomenon");
-		// Applying our criterion adds all the new phenonmena inside the global timeline
-		andCriterion.applyTo(siteAccessTimeline);
-
-		// Then create an ElementTypeFilter that will filter all phenomenon not
-		// respecting the input condition you gave it
-		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("Name of the X1 AND X2 phenomenon", false);
-		// Finally, we filter the global timeline to keep only X1 AND X2 phenomena
-		obsConditionFilter.applyTo(siteAccessTimeline);
-
-		/*
-		 * Now make sure your globalTimeline represents the access Timeline for the
-		 * input target Site and it's done ! You can print the Timeline using the
-		 * utility module of the BE as below
-		 */
-
+//		/*for (final Phenomenon phenom : timeline2.getPhenomenaList()) {
+//			siteAccessTimeline.addPhenomenon(phenom);
+//		}
+//		*/
+//
+//		// Define and use your own criteria, here is an example (use the right strings
+//		// defined when naming the phenomenon in the GenericCodingEventDetector)
+//		final AndCriterion andCriterion = new AndCriterion("Name of the X1 phenomenon", "Name of the X2 phenomenon",
+//				"Name of the X1 AND X2 phenomenon", "Comment about this phenomenon");
+//		// Applying our criterion adds all the new phenonmena inside the global timeline
+//		andCriterion.applyTo(siteAccessTimeline);
+//
+//		// Then create an ElementTypeFilter that will filter all phenomenon not
+//		// respecting the input condition you gave it
+//		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("Name of the X1 AND X2 phenomenon", false);
+//		// Finally, we filter the global timeline to keep only X1 AND X2 phenomena
+//		obsConditionFilter.applyTo(siteAccessTimeline);
+//
+//		/*
+//		 * Now make sure your globalTimeline represents the access Timeline for the
+//		 * input target Site and it's done ! You can print the Timeline using the
+//		 * utility module of the BE as below
+//		 */
+//
 		// Log the final access timeline associated to the current target
 		logger.info("\n" + targetSite.getName());
 		ProjectUtils.printTimeline(siteAccessTimeline);
@@ -754,15 +761,14 @@ public class CompleteMission extends SimpleMission {
 		 * Create your detector and return it.
 		 */
 		
-			PVCoordinatesProvider siteCoordinates = new TopocentricFrame(
+			PVCoordinatesProvider sitePVCoordinates = new TopocentricFrame(
 					this.getEarth(),
 					targetSite.getPoint(),
 					targetSite.getName());
 			
 			final double angleSunIncidence = FastMath.toRadians(180 - ConstantsBE.MAX_SUN_INCIDENCE_ANGLE);
-			
 		
-			EventDetector incidenceAngleDetector = new ThreeBodiesAngleDetector(this.getSun(), siteCoordinates, this.getEarth(), angleSunIncidence);
+			ThreeBodiesAngleDetector incidenceAngleDetector = new ThreeBodiesAngleDetector(this.getEarth(),sitePVCoordinates, this.getSun(), angleSunIncidence ,MAXCHECK_EVENTS, TRESHOLD_EVENTS,EventDetector.Action.CONTINUE);
 			
 		return incidenceAngleDetector;
 	}
