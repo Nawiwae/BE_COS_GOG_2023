@@ -155,7 +155,7 @@ public class CompleteMission extends SimpleMission {
 		for (Site targetSite : this.getSiteList()) {
 			Timeline siteAccessTimeline = createSiteAccessTimeline(targetSite);
 			this.accessPlan.put(targetSite, siteAccessTimeline);
-			ProjectUtils.printTimeline(siteAccessTimeline);
+			//ProjectUtils.printTimeline(siteAccessTimeline);
 		}
 		
 		return this.accessPlan;
@@ -477,11 +477,11 @@ public class CompleteMission extends SimpleMission {
 		 * createSiteXTimeline method as a basis.
 		 */
 	    final Timeline timeline_visibility = createSiteVisibilityTimeline(targetSite);
-	    ProjectUtils.printTimeline(timeline_visibility);
+	    //ProjectUtils.printTimeline(timeline_visibility);
 	    final Timeline timeline_illumination = createSiteSunIncidenceTimeline(targetSite);
-	    ProjectUtils.printTimeline(timeline_illumination);
+	    //ProjectUtils.printTimeline(timeline_illumination);
 	    final Timeline timeline_dazzling = createSite_Dazzling_Timeline(targetSite);
-	    ProjectUtils.printTimeline(timeline_dazzling);
+	    //ProjectUtils.printTimeline(timeline_dazzling);
 	
 
 		/**
@@ -514,9 +514,11 @@ public class CompleteMission extends SimpleMission {
 		for (final Phenomenon phenom : timeline_visibility.getPhenomenaList()) {
 			siteAccessTimeline.addPhenomenon(phenom);
 		}
+		
 		for (final Phenomenon phenom : timeline_illumination.getPhenomenaList()) {
 			siteAccessTimeline.addPhenomenon(phenom);
 		}
+		
 		/*for (final Phenomenon phenom : timeline2.getPhenomenaList()) {
 			siteAccessTimeline.addPhenomenon(phenom);
 		}*/
@@ -529,16 +531,17 @@ public class CompleteMission extends SimpleMission {
 				"VisibilityAndIlllumination", "Ensure that the targeted site is visible and illuminated");
 		// Applying our criterion adds all the new phenonmena inside the global timeline
 		visibilityANDillumination.applyTo(siteAccessTimeline);
+		
 
 		// Then create an ElementTypeFilter that will filter all phenomenon not
 		// respecting the input condition you gave it
-		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("VisibilityAndIlllumination", false);
+		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("VisibilityAndIllumination", false);
 		// Finally, we filter the global timeline to keep only X1 AND X2 phenomena
-		obsConditionFilter.applyTo(siteAccessTimeline);
+		//obsConditionFilter.applyTo(siteAccessTimeline);
 
 		final ElementTypeFilter DazzleConditionFilter = new ElementTypeFilter("Dazzling", true);
 
-		DazzleConditionFilter.applyTo(siteAccessTimeline);
+		//DazzleConditionFilter.applyTo(siteAccessTimeline);
 
 		/*
 		 * Now make sure your globalTimeline represents the access Timeline for the
@@ -1181,7 +1184,7 @@ public class CompleteMission extends SimpleMission {
 			final double angleSunIncidence = FastMath.toRadians(180 - ConstantsBE.MAX_SUN_INCIDENCE_ANGLE);
 			
 		
-			EventDetector incidenceAngleDetector = new ThreeBodiesAngleDetector(this.getSun(), siteCoordinates, this.getEarth(), angleSunIncidence);
+			EventDetector incidenceAngleDetector = new ThreeBodiesAngleDetector(this.getEarth(), siteCoordinates, this.getSun(), angleSunIncidence, MAXCHECK_EVENTS, TRESHOLD_EVENTS, EventDetector.Action.CONTINUE );
 			
 		return incidenceAngleDetector;
 	}
