@@ -3,7 +3,7 @@ package progmission;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-//bi
+
 import org.slf4j.Logger;
 
 import fr.cnes.sirius.patrius.attitudes.Attitude;
@@ -474,9 +474,9 @@ public class CompleteMission extends SimpleMission {
 		 * constraint. All the methods you code can be coded using the given
 		 * createSiteXTimeline method as a basis.
 		 */
-	    /*final Timeline timeline_visibility = createSite_visibility_Timeline(targetSite);
-	    final Timeline timeline_illumination = createSite_illumination_Timeline(targetSite);*/
-	    final Timeline timeline_Dazzling = createSite_Dazzling_Timeline(targetSite);
+	    final Timeline timeline_visibility = createSiteVisibilityTimeline(targetSite);
+	    final Timeline timeline_illumination = createSiteSunIncidenceTimeline(targetSite);
+	    final Timeline timeline_dazzling = createSite_Dazzling_Timeline(targetSite);
 		// etc.
 
 		/**
@@ -503,7 +503,7 @@ public class CompleteMission extends SimpleMission {
 		final Timeline siteAccessTimeline = new Timeline(
 				new AbsoluteDateInterval(this.getStartDate(), this.getEndDate()));
 		// Adding the phenomena of all the considered timelines
-		for (final Phenomenon phenom : timeline_Dazzling.getPhenomenaList()) {
+		for (final Phenomenon phenom : timeline_dazzling.getPhenomenaList()) {
 			siteAccessTimeline.addPhenomenon(phenom);
 		}
 		for (final Phenomenon phenom : timeline_visibility.getPhenomenaList()) {
@@ -523,7 +523,7 @@ public class CompleteMission extends SimpleMission {
 		final AndCriterion visibilityANDillumination = new AndCriterion("Visibility", "Illumination",
 				"VisibilityAndIlllumination", "Ensure that the targeted site is visible and illuminated");
 		// Applying our criterion adds all the new phenonmena inside the global timeline
-		andCriterion.applyTo(siteAccessTimeline);
+		AndCriterion.applyTo(siteAccessTimeline);
 
 		// Then create an ElementTypeFilter that will filter all phenomenon not
 		// respecting the input condition you gave it
