@@ -19,6 +19,7 @@ import fr.cnes.sirius.patrius.events.GenericCodingEventDetector;
 import fr.cnes.sirius.patrius.events.Phenomenon;
 import fr.cnes.sirius.patrius.events.postprocessing.AndCriterion;
 import fr.cnes.sirius.patrius.events.postprocessing.ElementTypeFilter;
+import fr.cnes.sirius.patrius.events.postprocessing.NotCriterion;
 import fr.cnes.sirius.patrius.events.postprocessing.Timeline;
 import fr.cnes.sirius.patrius.events.sensor.SensorVisibilityDetector;
 import fr.cnes.sirius.patrius.frames.FramesFactory;
@@ -528,20 +529,27 @@ public class CompleteMission extends SimpleMission {
 
 		//événements à renommer j'ai pas trouvé tous vos noms
 		final AndCriterion visibilityANDillumination = new AndCriterion("Visibility", "Illumination",
-				"VisibilityAndIlllumination", "Ensure that the targeted site is visible and illuminated");
+				"VisibilityAndIllumination", "Ensure that the targeted site is visible and illuminated");
 		// Applying our criterion adds all the new phenonmena inside the global timeline
 		visibilityANDillumination.applyTo(siteAccessTimeline);
 		
-
+		final NotCriterion NoDazzling = new NotCriterion("Dazzling", 
+				"NoDazzling", "Ensure that the sun doesnt' dazzle the sat");
+		// Applying our criterion adds all the new phenonmena inside the global timeline
+		NoDazzling.applyTo(siteAccessTimeline);
+		
+		final AndCriterion FullVisu = new AndCriterion("VisibilityAndIllumination", "NoDazzling",
+				"FullVisu", "Ensure that the targeted site is visible and illuminated and not dazzled");
+		// Applying our criterion adds all the new phenonmena inside the global timeline
+		FullVisu.applyTo(siteAccessTimeline);
+		
+		
 		// Then create an ElementTypeFilter that will filter all phenomenon not
 		// respecting the input condition you gave it
-		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("VisibilityAndIllumination", false);
+		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("FullVisu", false);
 		// Finally, we filter the global timeline to keep only X1 AND X2 phenomena
-		//obsConditionFilter.applyTo(siteAccessTimeline);
+		obsConditionFilter.applyTo(siteAccessTimeline);
 
-		final ElementTypeFilter DazzleConditionFilter = new ElementTypeFilter("Dazzling", true);
-
-		//DazzleConditionFilter.applyTo(siteAccessTimeline);
 
 		/*
 		 * Now make sure your globalTimeline represents the access Timeline for the
