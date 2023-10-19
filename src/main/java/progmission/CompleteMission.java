@@ -520,18 +520,18 @@ public class CompleteMission extends SimpleMission {
 		// defined when naming the phenomenon in the GenericCodingEventDetector)
 
 		//événements à renommer j'ai pas trouvé tous vos noms
-		final AndCriterion visibilityANDillumination = new AndCriterion("SiteVisible", "SiteIlluminated",
-				"SiteVisibleAndIllluminated", "Ensure that the targeted site is visible and illuminated");
+		final AndCriterion visibilityANDillumination = new AndCriterion("Visibility", "SiteIlluminated",
+				"VisibilityAndIlllumination", "Ensure that the targeted site is visible and illuminated");
 		// Applying our criterion adds all the new phenonmena inside the global timeline
 		andCriterion.applyTo(siteAccessTimeline);
 
 		// Then create an ElementTypeFilter that will filter all phenomenon not
 		// respecting the input condition you gave it
-		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("SiteVisibleAndIllluminated", false);
+		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("VisibilityAndIlllumination", false);
 		// Finally, we filter the global timeline to keep only X1 AND X2 phenomena
 		obsConditionFilter.applyTo(siteAccessTimeline);
 
-		final ElementTypeFilter DazzleConditionFilter = new ElementTypeFilter("SiteDazzling", True);
+		final ElementTypeFilter DazzleConditionFilter = new ElementTypeFilter("Dazzling", True);
 
 		DazzleConditionFilter.applyTo(siteAccessTimeline);
 
