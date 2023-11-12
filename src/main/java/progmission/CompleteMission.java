@@ -19,12 +19,15 @@ import fr.cnes.sirius.patrius.events.GenericCodingEventDetector;
 import fr.cnes.sirius.patrius.events.Phenomenon;
 import fr.cnes.sirius.patrius.events.postprocessing.AndCriterion;
 import fr.cnes.sirius.patrius.events.postprocessing.ElementTypeFilter;
+import fr.cnes.sirius.patrius.events.postprocessing.NotCriterion;
 import fr.cnes.sirius.patrius.events.postprocessing.Timeline;
 import fr.cnes.sirius.patrius.events.sensor.SensorVisibilityDetector;
 import fr.cnes.sirius.patrius.frames.FramesFactory;
 import fr.cnes.sirius.patrius.frames.TopocentricFrame;
+import fr.cnes.sirius.patrius.math.util.FastMath;
 import fr.cnes.sirius.patrius.propagation.analytical.KeplerianPropagator;
 import fr.cnes.sirius.patrius.propagation.events.EventDetector;
+import fr.cnes.sirius.patrius.propagation.events.ThreeBodiesAngleDetector;
 import fr.cnes.sirius.patrius.time.AbsoluteDate;
 import fr.cnes.sirius.patrius.time.AbsoluteDateInterval;
 import fr.cnes.sirius.patrius.time.AbsoluteDateIntervalsList;
@@ -153,7 +156,7 @@ public class CompleteMission extends SimpleMission {
 		for (Site targetSite : this.getSiteList()) {
 			Timeline siteAccessTimeline = createSiteAccessTimeline(targetSite);
 			this.accessPlan.put(targetSite, siteAccessTimeline);
-			ProjectUtils.printTimeline(siteAccessTimeline);
+			//ProjectUtils.printTimeline(siteAccessTimeline);
 		}
 		
 		return this.accessPlan;
@@ -474,12 +477,13 @@ public class CompleteMission extends SimpleMission {
 		 * constraint. All the methods you code can be coded using the given
 		 * createSiteXTimeline method as a basis.
 		 */
-	    final Timeline Visibility_Timeline = createSiteVisibilityTimeline(targetSite);
-	    ProjectUtils.printTimeline(Visibility_Timeline);
-	    
-	    
-	    final Timeline timeline2 = createSiteXTimeline(targetSite);
-		// etc.
+	    final Timeline timeline_visibility = createSiteVisibilityTimeline(targetSite);
+	    //ProjectUtils.printTimeline(timeline_visibility);
+	    final Timeline timeline_illumination = createSiteIlluminationTimeline(targetSite);
+	    //ProjectUtils.printTimeline(timeline_illumination);
+	    final Timeline timeline_dazzling = createSiteDazzlingTimeline(targetSite);
+	    //ProjectUtils.printTimeline(timeline_dazzling);
+	
 
 		/**
 		 * Step 2 :
@@ -505,25 +509,47 @@ public class CompleteMission extends SimpleMission {
 		final Timeline siteAccessTimeline = new Timeline(
 				new AbsoluteDateInterval(this.getStartDate(), this.getEndDate()));
 		// Adding the phenomena of all the considered timelines
-		for (final Phenomenon phenom : Visibility_Timeline.getPhenomenaList()) {
+		for (final Phenomenon phenom : timeline_dazzling.getPhenomenaList()) {
 			siteAccessTimeline.addPhenomenon(phenom);
 		}
-		for (final Phenomenon phenom : timeline2.getPhenomenaList()) {
+		for (final Phenomenon phenom : timeline_visibility.getPhenomenaList()) {
 			siteAccessTimeline.addPhenomenon(phenom);
 		}
+		
+		for (final Phenomenon phenom : timeline_illumination.getPhenomenaList()) {
+			siteAccessTimeline.addPhenomenon(phenom);
+		}
+		
+		/*for (final Phenomenon phenom : timeline2.getPhenomenaList()) {
+			siteAccessTimeline.addPhenomenon(phenom);
+		}*/
 
 		// Define and use your own criteria, here is an example (use the right strings
 		// defined when naming the phenomenon in the GenericCodingEventDetector)
-		final AndCriterion andCriterion = new AndCriterion("Name of the X1 phenomenon", "Name of the X2 phenomenon",
-				"Name of the X1 AND X2 phenomenon", "Comment about this phenomenon");
-		// Applying our criterion adds all the new phenonmena inside the global timeline
-		andCriterion.applyTo(siteAccessTimeline);
 
+		//événements à renommer j'ai pas trouvé tous vos noms
+		final AndCriterion visibilityANDillumination = new AndCriterion("Visibility", "Illumination",
+				"VisibilityAndIllumination", "Ensure that the targeted site is visible and illuminated");
+		// Applying our criterion adds all the new phenonmena inside the global timeline
+		visibilityANDillumination.applyTo(siteAccessTimeline);
+		
+		final NotCriterion NoDazzling = new NotCriterion("Dazzling", 
+				"NoDazzling", "Ensure that the sun doesnt' dazzle the sat");
+		// Applying our criterion adds all the new phenonmena inside the global timeline
+		NoDazzling.applyTo(siteAccessTimeline);
+		
+		final AndCriterion FullVisu = new AndCriterion("VisibilityAndIllumination", "NoDazzling",
+				"FullVisu", "Ensure that the targeted site is visible and illuminated and not dazzled");
+		// Applying our criterion adds all the new phenonmena inside the global timeline
+		FullVisu.applyTo(siteAccessTimeline);
+		
+		
 		// Then create an ElementTypeFilter that will filter all phenomenon not
 		// respecting the input condition you gave it
-		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("Name of the X1 AND X2 phenomenon", false);
+		final ElementTypeFilter obsConditionFilter = new ElementTypeFilter("FullVisu", false);
 		// Finally, we filter the global timeline to keep only X1 AND X2 phenomena
 		obsConditionFilter.applyTo(siteAccessTimeline);
+
 
 		/*
 		 * Now make sure your globalTimeline represents the access Timeline for the
@@ -632,7 +658,8 @@ public class CompleteMission extends SimpleMission {
 		 * This is how you add a detector to a propagator, feel free to add several
 		 * detectors to the satellite propagator !
 		 */
-		this.getSatellite().getPropagator().addEventDetector(VisibilityDetector);
+		this.createDefaultPropagator().addEventDetector(VisibilityDetector);
+		
 		
 		/**
 		 * Step 3 :
@@ -696,6 +723,9 @@ public class CompleteMission extends SimpleMission {
 		return VisibilityTimeline;
 	}
 	
+
+	
+	
 	/**
 	 * [COPY-PASTE AND COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
 	 * 
@@ -714,7 +744,7 @@ public class CompleteMission extends SimpleMission {
 	 * @throws PatriusException If a {@link PatriusException} occurs when creating
 	 *                          the {@link Timeline}.
 	 */
-	private Timeline createSiteXTimeline(Site targetSite) throws PatriusException {
+	private Timeline createSiteDazzlingTimeline(Site targetSite) throws PatriusException {
 		/**
 		 * Here is a quick idea of how to compute a Timeline. A Timeline contains a
 		 * PhenomenaList, which is list of Phenomenon objects. Each Phenomenon object
@@ -767,7 +797,7 @@ public class CompleteMission extends SimpleMission {
 		 * Complete the method below to build your detector. More indications are given
 		 * in the method.
 		 */
-	    final EventDetector constraintXDetector = createConstraintXDetector();
+	    final EventDetector constraint_Dazzling_Detector = createConstraintDazzlingDetector(targetSite);
 
 		/**
 		 * Step 2 :
@@ -786,7 +816,7 @@ public class CompleteMission extends SimpleMission {
 		 * This is how you add a detector to a propagator, feel free to add several
 		 * detectors to the satellite propagator !
 		 */
-		this.getSatellite().getPropagator().addEventDetector(constraintXDetector);
+	    this.createDefaultPropagator().addEventDetector(constraint_Dazzling_Detector);
 
 		/**
 		 * Step 3 :
@@ -802,13 +832,13 @@ public class CompleteMission extends SimpleMission {
 		 * Develop the code in which you create your GenericCodingEventDetector and use
 		 * it to create a CodedEventsLogger here. You have some example code to help.
 		 */
-		final GenericCodingEventDetector codingEventXDetector = new GenericCodingEventDetector(constraintXDetector,
-				"Event starting the X phenomenon", "Event ending the X phenomenon", true, "Name of the X phenomenon");
-		final CodedEventsLogger eventXLogger = new CodedEventsLogger();
-		final EventDetector eventXDetector = eventXLogger.monitorDetector(codingEventXDetector);
+		final GenericCodingEventDetector codingDazzlingDetector = new GenericCodingEventDetector(constraint_Dazzling_Detector,
+				"Dazzling starting", "Dazzling ending", true, "Dazzling");
+		final CodedEventsLogger eventDazzlingLogger = new CodedEventsLogger();
+		final EventDetector eventDazzlingDetector = eventDazzlingLogger.monitorDetector(codingDazzlingDetector);
 		// Then you add your logger to the propagator, it will monitor the event coded
 		// by the codingEventDetector
-		this.getSatellite().getPropagator().addEventDetector(eventXDetector);
+		this.getSatellite().getPropagator().addEventDetector(eventDazzlingDetector);
 
 		/**
 		 * Step 4 :
@@ -844,12 +874,166 @@ public class CompleteMission extends SimpleMission {
 		// Creating a Timeline to process the events : we are going to define one
 		// visibility Phenomenon by couple of events "start -> end" (linked to the
 		// increase and decrease of the g function of the visibility detector)
-		final Timeline phenomenonXTimeline = new Timeline(eventXLogger,
+		final Timeline phenomenonDazzlingTimeline = new Timeline(eventDazzlingLogger,
 				new AbsoluteDateInterval(this.getStartDate(), this.getEndDate()), null);
 
-		return phenomenonXTimeline;
+		return phenomenonDazzlingTimeline;
 	}
 
+/**
+	 * [COPY-PASTE AND COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
+	 * 
+	 * This method should compute a {@link Timeline} object which encapsulates all
+	 * the {@link Phenomenon} corresponding to a orbital phenomenon X relative to
+	 * the input target {@link Site}. For example, X can be the {@link Site}
+	 * visibility phenomenon.
+	 * 
+	 * You can copy-paste this method and adapt it for every X {@link Phenomenon}
+	 * and {@link Timeline} you need to implement. The global process described here
+	 * stays the same.
+	 * 
+	 * @param targetSite Input target {@link Site}
+	 * @return The {@link Timeline} containing all the {@link Phenomenon} relative
+	 *         to the X phenomenon to monitor.
+	 * @throws PatriusException If a {@link PatriusException} occurs when creating
+	 *                          the {@link Timeline}.
+	 */
+	private Timeline createSiteIlluminationTimeline(Site targetSite) throws PatriusException {
+		/**
+		 * Here is a quick idea of how to compute a Timeline. A Timeline contains a
+		 * PhenomenaList, which is list of Phenomenon objects. Each Phenomenon object
+		 * represents an phenomenon in orbit which is defined between two AbsoluteDate
+		 * objects and their associated CodedEvent which define the begin and the end of
+		 * the Phenomenon. For example, the Sun visibility can be defined as a
+		 * phenomenon beginning with the start of visibility and ending with the end of
+		 * visibility, itself defined using geometrical rules.
+		 * 
+		 * Now, how to create a Phenomenon object matching the requirement of a given
+		 * orbital phenomenon.
+		 * 
+		 * For that, you can use Patrius possibilities with the
+		 * "fr.cnes.sirius.patrius.propagation.events", "fr.cnes.sirius.patrius.events",
+		 * "fr.cnes.sirius.patrius.events.sensor" and the
+		 * "fr.cnes.sirius.patrius.events.postprocessing" modules. See the modules 05
+		 * and 09 of the Patrius formation for those aspects, you have examples of codes
+		 * using those modules and how to build a Timeline derived from other objects in
+		 * a representative case.
+		 * 
+		 * Below are some basic steps and tips to help you search for the right
+		 * informations in Javadoc and in the Patrius formation in order to compute your
+		 * Timeline.
+		 * 
+		 */
+
+		/**
+		 * Step 1 :
+		 * 
+		 * Here we deal with event detection. As explain in the module 05, this is done
+		 * with EventDetector objects. If you look at the Javadoc, you'll find you all
+		 * sorts of detectors. You need to translate the X input constraint (for example
+		 * an incidence angle between the sensor and the target, sun incidence angle,
+		 * masking of the target by the Earth, etc.) into an EventDetector object.
+		 * Scroll through the event detection modules to find the one adapted to your
+		 * problem (represented by the X constraint which describe the X phenomenon you
+		 * want to detect) and then look at the inputs you need to build it.
+		 * 
+		 * Please note that in order to facilitate the task for you, we provide the
+		 * object Satellite. If you look how the constructor build this object, you will
+		 * find that our Satellite already has an Assembly filed with a lot of
+		 * properties. Among those properties, there is a SensorProperty that you can
+		 * use to your advantage when trying to build you detector (for example when
+		 * trying to build a visibility detector). See the module 7 of the formation to
+		 * learn more about the Assembly object. You can use the SensorProperty via the
+		 * Assembly of the Satellite and its name to define appropriate detectors.
+		 * 
+		 */
+		/*
+		 * Complete the method below to build your detector. More indications are given
+		 * in the method.
+		 */
+	    final EventDetector constraintIlluminationDetector = createConstraintIlluminationDetector(targetSite);
+
+		/**
+		 * Step 2 :
+		 * 
+		 * When you have your detector, you can add it on an Orbit Propagator such as
+		 * the KeplerianPropagator of your Satellite. If you give the detector the right
+		 * parameters, you can then propagate the orbit (see the SimpleMission code and
+		 * the module 03 from the Patrius formation) and the detector will automatically
+		 * perform actions when a particular orbital event happens (you need to
+		 * configure the right detector to detect the event you want to monitor).
+		 * 
+		 * You can add several detectors to the propagator (one per constraint per Site
+		 * for example).
+		 */
+		/*
+		 * This is how you add a detector to a propagator, feel free to add several
+		 * detectors to the satellite propagator !
+		 */
+	    this.createDefaultPropagator().addEventDetector(constraintIlluminationDetector);
+
+		/**
+		 * Step 3 :
+		 * 
+		 * Now you need to use the detector's ability to create CodedEvent objects to
+		 * actually detect the events and visualize them. You can obtain CodedEvents
+		 * with a CodedEventsLogger that you plug on an EventDetector with the
+		 * CodedEventsLogger.monitorDetector() method. For that, you will need the
+		 * GenericCodingEventDetector class. See the module 09 to understand how to use
+		 * those objects in order to detect events.
+		 */
+		/*
+		 * Develop the code in which you create your GenericCodingEventDetector and use
+		 * it to create a CodedEventsLogger here. You have some example code to help.
+		 */
+		final GenericCodingEventDetector codingEventIlluminationDetector = new GenericCodingEventDetector(constraintIlluminationDetector,
+				"Start of illumination", "End of illumination", true, "Illumination");
+		final CodedEventsLogger eventIlluminationLogger = new CodedEventsLogger();
+		final EventDetector eventIlluminationDetector = eventIlluminationLogger.monitorDetector(codingEventIlluminationDetector);
+		// Then you add your logger to the propagator, it will monitor the event coded
+		// by the codingEventDetector
+		this.getSatellite().getPropagator().addEventDetector(eventIlluminationDetector);
+
+		/**
+		 * Step 4 :
+		 * 
+		 * Now you can propagate your orbit and the propagator will use the added
+		 * detectors and loggers the way you defined them, detecting all events you
+		 * wanted to monitor.
+		 */
+		// Finally propagating the orbit
+		this.getSatellite().getPropagator().propagate(this.getStartDate(), this.getEndDate());
+		/**
+		 * Remark : since you can add as many EventDetectors as you want to an instance
+		 * of propagator, you might want to delay this step afterwards to propagate the
+		 * orbit with all your detectors at once. Here we do it right now to provide a
+		 * clear example but feel free to code your own more optimized version of it.
+		 */
+
+		/**
+		 * Step 5 : WARNING : this can only be done after the propagation !
+		 * 
+		 * Now, you have to post process all your events. That's when you actually
+		 * create your Timeline object which contains the Phenomenon you want to
+		 * monitor.
+		 * 
+		 * Since you have propagated your orbit, the events that have been detected are
+		 * stored inside the detector and logger. This mechanic is used to create a
+		 * Timeline.
+		 */
+		/*
+		 * See code below and create your own code to have your X Timeline describing
+		 * all X phenomenon you want to detect.
+		 */
+		// Creating a Timeline to process the events : we are going to define one
+		// visibility Phenomenon by couple of events "start -> end" (linked to the
+		// increase and decrease of the g function of the visibility detector)
+		final Timeline phenomenonIlluminationTimeline = new Timeline(eventIlluminationLogger,
+				new AbsoluteDateInterval(this.getStartDate(), this.getEndDate()), null);
+
+		return phenomenonIlluminationTimeline;
+	}
+	
 	/**
 	 * [COPY-PASTE AND COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
 	 * 
@@ -935,7 +1119,7 @@ public class CompleteMission extends SimpleMission {
 				MAXCHECK_EVENTS, TRESHOLD_EVENTS, EventDetector.Action.CONTINUE, EventDetector.Action.CONTINUE);
 
 	}
-	
+
 	/**
 	 * [COPY-PASTE AND COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
 	 * 
@@ -951,7 +1135,7 @@ public class CompleteMission extends SimpleMission {
 	 * @return An {@link EventDetector} answering the constraint (for example a
 	 *         {@link SensorVisibilityDetector} for a visibility constraint).
 	 */
-	private EventDetector createConstraintXDetector() {
+	private EventDetector createConstraintIlluminationDetector(Site targetSite) {
 		/**
 		 * Here you build an EventDetector object that corresponds to the constraint X:
 		 * visibility of the target from the satellite, target is in day time, whatever.
@@ -1002,7 +1186,101 @@ public class CompleteMission extends SimpleMission {
 		/*
 		 * Create your detector and return it.
 		 */
-		return null;
+		
+			PVCoordinatesProvider siteCoordinates = new TopocentricFrame(
+					this.getEarth(),
+					targetSite.getPoint(),
+					targetSite.getName());
+			
+			final double angleIllumination = FastMath.toRadians(180 - ConstantsBE.MAX_SUN_INCIDENCE_ANGLE);
+			
+		
+			EventDetector incidenceAngleDetector = new ThreeBodiesAngleDetector(this.getEarth(), siteCoordinates, this.getSun(), angleIllumination, MAXCHECK_EVENTS, TRESHOLD_EVENTS, EventDetector.Action.CONTINUE );
+			
+		return incidenceAngleDetector;
+	}
+
+	/**
+	 * [COPY-PASTE AND COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
+	 * 
+	 * Create an adapted instance of {@link EventDetector} matching the input need
+	 * for monitoring the events defined by the X constraint. (X can be a lot of
+	 * things).
+	 * 
+	 * You can copy-paste this method to adapt it to the {@link EventDetector} X
+	 * that you want to create.
+	 * 
+	 * Note: this can have different inputs that we don't define here
+	 * 
+	 * @return An {@link EventDetector} answering the constraint (for example a
+	 *         {@link SensorVisibilityDetector} for a visibility constraint).
+	 */
+	private EventDetector createConstraintDazzlingDetector(Site targetSite) {
+		/**
+		 * Here you build an EventDetector object that corresponds to the constraint X:
+		 * visibility of the target from the satellite, target is in day time, whatever.
+		 *
+		 * Note that when you create a detector, you choose the actions that it will
+		 * perform when the target event is detected. See the module 5 for more
+		 * informations about this.
+		 * 
+		 * Visibility: For the visibility detector, you can use a SensorModel. You will
+		 * have to add the Earth as a masking body with the method
+		 * addMaskingCelestialBody and to set the main target of the SensorModel with
+		 * the method setMainTarget. Then, you can use the class
+		 * SensorVisibilityDetector with your SensorModel.
+		 * 
+		 * Sun incidence: For the sun incidence angle detector (illumination
+		 * condition), you can use the class ThreeBodiesAngleDetector, the three bodies
+		 * being the ground target, the Earth and the Sun. See the inputs of this class
+		 * to build the object properly.
+		 * 
+		 * Dazzling: Your satellite needs to be protected from dazzling. As a good 
+		 * approximation, dazzling is avoided if the angle satellite - target - the Sun is 
+		 * below the maximum phase angle (90 degrees, see {@link ConstantsBE}). The class
+		 * ThreeBodiesAngleDetector is suitable for this condition as well.
+		 * 
+		 * Tip 1 : When you create the detectors listed above, you can use the two
+		 * public final static fields MAXCHECK_EVENTS and TRESHOLD_EVENTS to configure
+		 * the detector (those values are often asked in input of the EventDectector
+		 * classes. You will also indicate the Action to perform when the detection
+		 * occurs, which is Action.CONTINUE.
+		 * 
+		 * Tip 2 : The Satellite uses the Assembly class to represent its model.
+		 * To access this Assembly, you have a getter in the Satellite class. Then, to
+		 * access any part of an Assembly, you can call Assembly#getPart(String
+		 * partName). The parts name for our Satellite are declared in the Satellite
+		 * class.
+		 * 
+		 * Tip 3 : when you need an object which is an interface (let's say for
+		 * example a PVCoordinatesProvider) you have to find a class implementing this
+		 * interface and which models what you want to do (here which models the
+		 * target's position/coordinates). To find all the classes implementing an
+		 * interface : "Right Clic", then "Open Type Hierarchy". For example for a
+		 * PVCoordinatesProvider, you have a lot of classes : AbstractCelestialBody if
+		 * your target is a planet for example, or any Propagator if you are propagating
+		 * the PV of a Target like a satellite, or TopocentricFrame if the target is a
+		 * location at the surface of a celestial body, etc.
+		 * 
+		 */
+		/*
+		 * Create your detector and return it.
+		 */
+		
+		/* Site PVCoordinate */
+
+
+		PVCoordinatesProvider sitePVCoordinates = new TopocentricFrame(
+				this.getEarth(),
+				targetSite.getPoint(),
+				targetSite.getName()
+		);
+		
+
+
+		/*Detector creation */
+		ThreeBodiesAngleDetector Dazzling_detector = new ThreeBodiesAngleDetector(sitePVCoordinates, this.getSun(),ThreeBodiesAngleDetector.BodyOrder.FIRST,FastMath.toRadians(ConstantsBE.MAX_SUN_PHASE_ANGLE), MAXCHECK_EVENTS, TRESHOLD_EVENTS, EventDetector.Action.CONTINUE);
+		return Dazzling_detector;
 	}
 
 	/**
