@@ -32,13 +32,14 @@ public class CompleteMissionMain {
 		double t0 = System.currentTimeMillis();
 
 		// Instantiating our mission using the CompleteMission object.
-		final CompleteMission mission = new CompleteMission("BE Supaero mission", 3);
+		final CompleteMission mission = new CompleteMission("BE Supaero mission", 10);
 		LOGGER.info("Complete simulation starting ...");
 		LOGGER.info(mission.toString());
 
 		// First step is to compute when the satellite can access the targets. Each
 		// access is an observation opportunity to be consider in the later scheduling
 		// process.
+		LOGGER.info("##### COMPUTE ACCESS PLAN #####");
 		Map<Site, Timeline> accessPlan = mission.computeAccessPlan();
 		LOGGER.info(accessPlan.toString());
 
@@ -46,11 +47,14 @@ public class CompleteMissionMain {
 		// Observation objects that can be achieved one after each other by the
 		// satellite without breaking the cinematic constraints imposed by the
 		// satellite agility.
+		LOGGER.info("##### COMPUTE OBSERVATION PLAN #####");
 		Map<Site, AttitudeLawLeg> observationPlan = mission.computeObservationPlan();
 		LOGGER.info(observationPlan.toString());
 
 		// Then, we compute the cinematic plan, which is the whole cinematic sequence of
 		// attitude law legs for our satellite during the mission horizon
+
+		LOGGER.info("##### COMPUTE CINEMATIC PLAN #####");
 		StrictAttitudeLegsSequence<AttitudeLeg> cinematicPlan = mission.computeCinematicPlan();
 		LOGGER.info(cinematicPlan.toPrettyString());
 
