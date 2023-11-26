@@ -13,6 +13,7 @@ import fr.cnes.sirius.patrius.attitudes.AttitudeLeg;
 import fr.cnes.sirius.patrius.attitudes.AttitudeProvider;
 import fr.cnes.sirius.patrius.attitudes.ConstantSpinSlew;
 import fr.cnes.sirius.patrius.attitudes.StrictAttitudeLegsSequence;
+import fr.cnes.sirius.patrius.attitudes.TargetGroundPointing;
 import fr.cnes.sirius.patrius.events.CodedEvent;
 import fr.cnes.sirius.patrius.events.CodedEventsLogger;
 import fr.cnes.sirius.patrius.events.GenericCodingEventDetector;
@@ -24,6 +25,7 @@ import fr.cnes.sirius.patrius.events.postprocessing.Timeline;
 import fr.cnes.sirius.patrius.events.sensor.SensorVisibilityDetector;
 import fr.cnes.sirius.patrius.frames.FramesFactory;
 import fr.cnes.sirius.patrius.frames.TopocentricFrame;
+import fr.cnes.sirius.patrius.math.geometry.euclidean.threed.Vector3D;
 import fr.cnes.sirius.patrius.math.util.FastMath;
 import fr.cnes.sirius.patrius.propagation.analytical.KeplerianPropagator;
 import fr.cnes.sirius.patrius.propagation.events.EventDetector;
@@ -229,6 +231,14 @@ public class CompleteMission extends SimpleMission {
 		 * which is the basis of the creation of AttitudeLawLeg objects since you need
 		 * an AbsoluteDateInterval or two AbsoluteDates to do it.
 		 */
+		
+		List<Reservation> listResas = new ArrayList<>();
+
+		// Sorting sites by score to maximize the total score
+		this.getSiteList().sort(Comparator.comparing(Site::getScore).reversed());
+		
+		
+		
 		for (final Entry<Site, Timeline> entry : this.accessPlan.entrySet()) {
 			// Scrolling through the entries of the accessPlan
 			// Getting the target Site
@@ -1318,7 +1328,9 @@ public class CompleteMission extends SimpleMission {
 		/*
 		 * Complete the code below to create your observation law and return it
 		 */
-		return null;
+		TargetGroundPointing targetPointingLaw = new TargetGroundPointing(this.getEarth(), target.getPoint(), Vector3D.MINUS_K, Vector3D.PLUS_I);
+		
+		return targetPointingLaw;
 	}
 
 	
