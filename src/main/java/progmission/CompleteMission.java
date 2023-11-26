@@ -1,6 +1,8 @@
 package progmission;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -231,11 +233,19 @@ public class CompleteMission extends SimpleMission {
 		 * which is the basis of the creation of AttitudeLawLeg objects since you need
 		 * an AbsoluteDateInterval or two AbsoluteDates to do it.
 		 */
+<<<<<<< HEAD
 		
 		List<Reservation> listResas = new ArrayList<>();
 
 		// Sorting sites by score to maximize the total score
 		this.getSiteList().sort(Comparator.comparing(Site::getScore).reversed());
+=======
+		List<AbsoluteDate> observationsStartDate = new ArrayList<>();
+		
+		List<AbsoluteDate> observationsEndDate = new ArrayList<>();
+		
+		List<Site> observedTargetList = new ArrayList<>();
+>>>>>>> Luc
 		
 		
 		
@@ -243,20 +253,18 @@ public class CompleteMission extends SimpleMission {
 			// Scrolling through the entries of the accessPlan
 			// Getting the target Site
 			final Site target = entry.getKey();
-			logger.info("Current target site : " + target.getName());
+	
 			// Getting its access Timeline
 			final Timeline timeline = entry.getValue();
-			// Getting the access intervals
+			// Getting the access intervals;
 			final AbsoluteDateIntervalsList accessIntervals = new AbsoluteDateIntervalsList();
 			for (final Phenomenon accessWindow : timeline.getPhenomenaList()) {
 				// The Phenomena are sorted chronologically so the accessIntervals List is too
 			    final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
 				accessIntervals.add(accessInterval);
-				logger.info(accessInterval.toString());
+				//logger.info(accessInterval.toString());
 
-				// Use this method to create your observation leg, see more help inside the
-				// method.
-				final AttitudeLaw observationLaw = createObservationLaw(target);
+				
 
 				/**
 				 * Now that you have your observation law, you can compute at any AbsoluteDate
@@ -279,55 +287,77 @@ public class CompleteMission extends SimpleMission {
 				// Getting the begining/end of the accessIntervall as AbsoluteDate objects
 				final AbsoluteDate date1 = accessInterval.getLowerData();
 				final AbsoluteDate date2 = accessInterval.getUpperData();
-				final Attitude attitude1 = observationLaw.getAttitude(this.createDefaultPropagator(), date1,
-						this.getEme2000());
-				final Attitude attitude2 = observationLaw.getAttitude(this.createDefaultPropagator(), date2,
-						this.getEme2000());
-				/*
-				 * Now here is an example of code showing how to compute the duration of the
-				 * slew from attitude1 to attitude2 Here we compare two Attitudes coming from
-				 * the same AttitudeLaw which is a TargetGroundPointing so the
-				 */
-				final double slew12Duration = this.getSatellite().computeSlewDuration(attitude1, attitude2);
-				logger.info("Maximum possible duration of the slew : " + slew12Duration);
-				final double actualDuration = date2.durationFrom(date1);
-				logger.info("Actual duration of the slew : " + actualDuration);
-				/**
-				 * Of course, here the actual duration is less than the maximum possible
-				 * duration because the TargetGroundPointing mode is a very slow one and the
-				 * Satellite is very agile. But sometimes when trying to perform a slew from one
-				 * target to another, you will find that the Satellite doesn't have enough time,
-				 * then you need to either translate one of the observations or just don't
-				 * perform one of the observation.
-				 */
 
-				/**
-				 * Let's say after comparing several observation slews, you find a valid couple
-				 * of dates defining your observation window : {obsStart;obsEnd}, with
-				 * obsEnd.durationFrom(obsStart) == ConstantsBE.INTEGRATION_TIME.
-				 * 
-				 * Then you can use those dates to create your AtittudeLawLeg that you will
-				 * insert inside the observaiton pla, for this target. Reminder : only one
-				 * observation in the observation plan per target !
-				 * 
-				 * WARNING : what we do here doesn't work, we didn't check that there wasn't
-				 * another target observed while inserting this target observation, it's up to
-				 * you to build your observation plan using the methods and tips we provide. You
-				 * can also only insert one observation for each pass of the satellite and it's
-				 * fine.
-				 */
-				// Here we use the middle of the accessInterval to define our dates of
-				// observation
-				final AbsoluteDate middleDate = accessInterval.getMiddleDate();
-				final AbsoluteDate obsStart = middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME / 2);
-				final AbsoluteDate obsEnd = middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME / 2);
-				final AbsoluteDateInterval obsInterval = new AbsoluteDateInterval(obsStart, obsEnd);
-				// Then, we create our AttitudeLawLeg, that we name using the name of the target
-				final String legName = "OBS_" + target.getName();
-				final AttitudeLawLeg obsLeg = new AttitudeLawLeg(observationLaw, obsInterval, legName);
+				
+				final double maxSlewDuration = this.getSatellite().getMaxSlewDuration();
+				
+				/*Rempli le premier élément de la liste des observations automatiquement avec la 
+				 * première ville qui passe
+				 * ET est observable pendant plus de ConstantsBE.INTEGRATION_TIME OU ALORS
+				*va executer le code suivant si la date de début de l'interval d'accès est 
+				ultérieure à la dernière date de fin enregistrée + la max slew duration 
+				et que la cible n'est pas dans la liste des cibles visitées
+				*/
+				
+				if ((observedTargetList.isEmpty() && date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME) ||
+						(date2.shiftedBy(-ConstantsBE.INTEGRATION_TIME).compareTo(observationsEndDate.get(observedTargetList.size()-1).shiftedBy(maxSlewDuration))>0 
+						&& !observedTargetList.contains(target) 
+						&& date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME)) {
+				
+					if ((observedTargetList.isEmpty() && date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME)){
+						
+						logger.info(target.getName());
+					}
+					// Use this method to create your observation leg, see more help inside the
+					// method.
+					final AttitudeLaw observationLaw = createObservationLaw(target);
+					
+					/*
+					final Attitude attitude1 = observationLaw.getAttitude(this.createDefaultPropagator(), date1,
+							this.getEme2000());
+					final Attitude attitude2 = observationLaw.getAttitude(this.createDefaultPropagator(), date2,
+							this.getEme2000());
+					*/
+					/**
+					 * Let's say after comparing several observation slews, you find a valid couple
+					 * of dates defining your observation window : {obsStart;obsEnd}, with
+					 * obsEnd.durationFrom(obsStart) == ConstantsBE.INTEGRATION_TIME.
+					 * 
+					 * Then you can use those dates to create your AtittudeLawLeg that you will
+					 * insert inside the observaiton plan, for this target. Reminder : only one
+					 * observation in the observation plan per target !
+					 * 
+					 * WARNING : what we do here doesn't work, we didn't check that there wasn't
+					 * another target observed while inserting this target observation, it's up to
+					 * you to build your observation plan using the methods and tips we provide. You
+					 * can also only insert one observation for each pass of the satellite and it's
+					 * fine.
+					 */
+					// Here we use the middle of the accessInterval to define our dates of
+					// observation
+					final AbsoluteDate middleDate = accessInterval.getMiddleDate();
+					final AbsoluteDate obsStart = middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME / 2);
+					final AbsoluteDate obsEnd = middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME / 2);
+					final AbsoluteDateInterval obsInterval = new AbsoluteDateInterval(obsStart, obsEnd);
+					// Then, we create our AttitudeLawLeg, that we name using the name of the target
+					final String legName = "OBS_" + target.getName();
+					final AttitudeLawLeg obsLeg = new AttitudeLawLeg(observationLaw, obsInterval, legName);
 
-				// Finally, we add our leg to the plan
-				this.observationPlan.put(target, obsLeg);
+					// Finally, we add our leg to the plan
+					this.observationPlan.put(target, obsLeg);
+					
+					observationsStartDate.add(obsStart);
+					observationsEndDate.add(obsEnd);
+					observedTargetList.add(target);
+					
+					logger.info("Target site : " + target.getName() + "   observed from :  " + 
+					obsStart.toString() + "  to  " + obsEnd.toString());
+					
+					
+					
+					
+				}
+		
 
 			}
 
@@ -1130,6 +1160,8 @@ public class CompleteMission extends SimpleMission {
 
 	}
 
+<<<<<<< HEAD
+=======
 	/**
 	 * [COPY-PASTE AND COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
 	 * 
@@ -1210,6 +1242,92 @@ public class CompleteMission extends SimpleMission {
 		return incidenceAngleDetector;
 	}
 
+>>>>>>> Luc
+	/**
+	 * [COPY-PASTE AND COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
+	 * 
+	 * Create an adapted instance of {@link EventDetector} matching the input need
+	 * for monitoring the events defined by the X constraint. (X can be a lot of
+	 * things).
+	 * 
+	 * You can copy-paste this method to adapt it to the {@link EventDetector} X
+	 * that you want to create.
+	 * 
+	 * Note: this can have different inputs that we don't define here
+	 * 
+	 * @return An {@link EventDetector} answering the constraint (for example a
+	 *         {@link SensorVisibilityDetector} for a visibility constraint).
+	 */
+<<<<<<< HEAD
+	private EventDetector createConstraintIlluminationDetector(Site targetSite) {
+=======
+	private EventDetector createConstraintDazzlingDetector(Site targetSite) {
+>>>>>>> Luc
+		/**
+		 * Here you build an EventDetector object that corresponds to the constraint X:
+		 * visibility of the target from the satellite, target is in day time, whatever.
+		 *
+		 * Note that when you create a detector, you choose the actions that it will
+		 * perform when the target event is detected. See the module 5 for more
+		 * informations about this.
+		 * 
+		 * Visibility: For the visibility detector, you can use a SensorModel. You will
+		 * have to add the Earth as a masking body with the method
+		 * addMaskingCelestialBody and to set the main target of the SensorModel with
+		 * the method setMainTarget. Then, you can use the class
+		 * SensorVisibilityDetector with your SensorModel.
+		 * 
+		 * Sun incidence: For the sun incidence angle detector (illumination
+		 * condition), you can use the class ThreeBodiesAngleDetector, the three bodies
+		 * being the ground target, the Earth and the Sun. See the inputs of this class
+		 * to build the object properly.
+		 * 
+		 * Dazzling: Your satellite needs to be protected from dazzling. As a good 
+		 * approximation, dazzling is avoided if the angle satellite - target - the Sun is 
+		 * below the maximum phase angle (90 degrees, see {@link ConstantsBE}). The class
+		 * ThreeBodiesAngleDetector is suitable for this condition as well.
+		 * 
+		 * Tip 1 : When you create the detectors listed above, you can use the two
+		 * public final static fields MAXCHECK_EVENTS and TRESHOLD_EVENTS to configure
+		 * the detector (those values are often asked in input of the EventDectector
+		 * classes. You will also indicate the Action to perform when the detection
+		 * occurs, which is Action.CONTINUE.
+		 * 
+		 * Tip 2 : The Satellite uses the Assembly class to represent its model.
+		 * To access this Assembly, you have a getter in the Satellite class. Then, to
+		 * access any part of an Assembly, you can call Assembly#getPart(String
+		 * partName). The parts name for our Satellite are declared in the Satellite
+		 * class.
+		 * 
+		 * Tip 3 : when you need an object which is an interface (let's say for
+		 * example a PVCoordinatesProvider) you have to find a class implementing this
+		 * interface and which models what you want to do (here which models the
+		 * target's position/coordinates). To find all the classes implementing an
+		 * interface : "Right Clic", then "Open Type Hierarchy". For example for a
+		 * PVCoordinatesProvider, you have a lot of classes : AbstractCelestialBody if
+		 * your target is a planet for example, or any Propagator if you are propagating
+		 * the PV of a Target like a satellite, or TopocentricFrame if the target is a
+		 * location at the surface of a celestial body, etc.
+		 * 
+		 */
+		/*
+		 * Create your detector and return it.
+		 */
+		
+<<<<<<< HEAD
+			PVCoordinatesProvider siteCoordinates = new TopocentricFrame(
+					this.getEarth(),
+					targetSite.getPoint(),
+					targetSite.getName());
+			
+			final double angleIllumination = FastMath.toRadians(180 - ConstantsBE.MAX_SUN_INCIDENCE_ANGLE);
+			
+		
+			EventDetector incidenceAngleDetector = new ThreeBodiesAngleDetector(this.getEarth(), siteCoordinates, this.getSun(), angleIllumination, MAXCHECK_EVENTS, TRESHOLD_EVENTS, EventDetector.Action.CONTINUE );
+			
+		return incidenceAngleDetector;
+	}
+
 	/**
 	 * [COPY-PASTE AND COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
 	 * 
@@ -1277,6 +1395,8 @@ public class CompleteMission extends SimpleMission {
 		 * Create your detector and return it.
 		 */
 		
+=======
+>>>>>>> Luc
 		/* Site PVCoordinate */
 
 
@@ -1328,9 +1448,16 @@ public class CompleteMission extends SimpleMission {
 		/*
 		 * Complete the code below to create your observation law and return it
 		 */
+<<<<<<< HEAD
 		TargetGroundPointing targetPointingLaw = new TargetGroundPointing(this.getEarth(), target.getPoint(), Vector3D.MINUS_K, Vector3D.PLUS_I);
 		
 		return targetPointingLaw;
+=======
+		TargetGroundPointing targetGroundPointing = new TargetGroundPointing(this.getEarth(), target.getPoint(), Vector3D.MINUS_K, Vector3D.PLUS_I);
+
+		return targetGroundPointing;
+		
+>>>>>>> Luc
 	}
 
 	
