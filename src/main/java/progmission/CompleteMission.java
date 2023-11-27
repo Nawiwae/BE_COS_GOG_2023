@@ -456,8 +456,8 @@ public class CompleteMission extends SimpleMission {
 	    
 		    
 		    if (i==0) {
-		    	final AbsoluteDate endNadirLaw1 = obsStart.shiftedBy(-getSatellite().getMaxSlewDuration());
-		    	final Attitude endNadir1Attitude = nadirLaw.getAttitude(propagator, endNadirLaw1, getEme2000());
+		    	final AbsoluteDate endNadirLawInitial = obsStart.shiftedBy(-getSatellite().getMaxSlewDuration());
+		    	final Attitude endNadir1Attitude = nadirLaw.getAttitude(propagator, endNadirLawInitial, getEme2000());
 		    	
 		    	final Attitude startObsAttitude = siteObsLeg.getAttitude(propagator, obsStart, getEme2000());
 			    final Attitude endObsAttitude = siteObsLeg.getAttitude(propagator, obsEnd, getEme2000());
@@ -465,16 +465,16 @@ public class CompleteMission extends SimpleMission {
 			    
 			    // Finally computing the slews
 				// From nadir law 1 to first site observation
-			    final String slewName = "Slew_Nadir_to_" + targetSite.getName();
-			    final ConstantSpinSlew slew1 = new ConstantSpinSlew(endNadir1Attitude, startObsAttitude, slewName);
+			    final String slewInitialName = "Slew_Nadir_to_" + targetSite.getName();
+			    final ConstantSpinSlew slewInitial = new ConstantSpinSlew(endNadir1Attitude, startObsAttitude, slewInitialName);
 			    
 				// We create our two Nadir legs using the dates we computed
-			    final AttitudeLawLeg nadir1 = new AttitudeLawLeg(nadirLaw, start, endNadirLaw1, "Nadir_Law_1");
+			    final AttitudeLawLeg nadirInitial = new AttitudeLawLeg(nadirLaw, start, endNadirLawInitial, "Nadir_Law_Initial");
 
 				// Finally we can add all those legs to our cinametic plan, in the chronological
 				// order
-				this.cinematicPlan.add(nadir1);
-				this.cinematicPlan.add(slew1);
+				this.cinematicPlan.add(nadirInitial);
+				this.cinematicPlan.add(slewInitial);
 				this.cinematicPlan.add(siteObsLeg);
 			    
 			    
@@ -497,26 +497,72 @@ public class CompleteMission extends SimpleMission {
 		    	final Attitude startObsAttitude = siteObsLeg.getAttitude(propagator, obsStart, getEme2000());
 			    final Attitude endObsAttitude = siteObsLeg.getAttitude(propagator, obsEnd, getEme2000());
 			    
+			    final double deltaTimeObsNext = obsStart.durationFrom(lastObsEnd);
+		    	
+		    	//if we have enough time we come back to Nadir
+		    	if(deltaTimeObsNext > getSatellite().getMaxSlewDuration()) {
+		    		
+		    		//getting the info about the Nadir law to achieve
+			    	final AbsoluteDate startNadirLawTemp = lastObsEnd.shiftedBy(+getSatellite().getMaxSlewDuration()/2);
+			    	final AbsoluteDate endNadirLawTemp = obsStart.shiftedBy(-getSatellite().getMaxSlewDuration()/2);
+			    	final Attitude startNadirTempAttitude = nadirLaw.getAttitude(propagator, startNadirLawTemp, getEme2000());
+			    	
+		    		// Finally computing the slews
+					// From last observation to temporary Nadir
+				    final String slewNameLastObs2Nadir = "Slew_" + lastTargetSite.getName() + "_to_Nadir";
+				    final ConstantSpinSlew slewLastObs2Nadir = new ConstantSpinSlew(endLastObsAttitude, startNadirTempAttitude, slewNameLastObs2Nadir);
+				    
+				    // We create the temporary Nadir leg
+				    final AttitudeLawLeg nadirTemp = new AttitudeLawLeg(nadirLaw,startNadirLawTemp,endNadirLawTemp , "Nadir_Law_Temp");
+
+				    // From temporary Nadir to current observation
+				    
+				    final String slewNameNadir2Obs = "Slew_Nadir_to_" + targetSite.getName();
+				    final Attitude endNadirTempAttitude = nadirTemp.getAttitude(propagator, endNadirLawTemp, getEme2000());
+				    final ConstantSpinSlew slewNadir2Obs = new ConstantSpinSlew(endNadirTempAttitude, startObsAttitude, slewNameNadir2Obs);
+				   
+				    
+				    // From current site observation to final nadir law 
+				    final String slewNameFinal = "Slew_"+ targetSite.getName()+"_to_Nadir" ;
+				    final ConstantSpinSlew slewFinal = new ConstantSpinSlew(endObsAttitude, startNadir2Attitude, slewNameFinal);
+
+					// We create our two Nadir legs using the dates we computed
+				    final AttitudeLawLeg nadirFinal = new AttitudeLawLeg(nadirLaw, startNadirLaw2, end, "Nadir_Law_Final");
+				    
+				    
+					// Finally we can add all those legs to our cinematic plan, in the chronological
+					// order
+				    this.cinematicPlan.add(slewLastObs2Nadir);
+				    this.cinematicPlan.add(nadirTemp);
+				    this.cinematicPlan.add(slewNadir2Obs);
+					this.cinematicPlan.add(siteObsLeg);
+					this.cinematicPlan.add(slewFinal);
+					this.cinematicPlan.add(nadirFinal);
+		    	} else {
+			    
+			    
+			    
 			    
 			    // Finally computing the slews
-			 // From last observation to current site observation
-			    final String slewName1 = "Slew_" + lastTargetSite.getName() + "_to_" + targetSite.getName();
-			    final ConstantSpinSlew slew1 = new ConstantSpinSlew(endLastObsAttitude, startObsAttitude, slewName1);
+		    	// From last observation to current site observation
+			    final String slewNameSite2Site = "Slew_" + lastTargetSite.getName() + "_to_" + targetSite.getName();
+			    final ConstantSpinSlew slewSite2Site = new ConstantSpinSlew(endLastObsAttitude, startObsAttitude, slewNameSite2Site);
 			    
-				// From last site observation to nadir law 2
-			    final String slewName2 = "Slew_"+ targetSite.getName()+"_to_Nadir" ;
-			    final ConstantSpinSlew slew2 = new ConstantSpinSlew(endObsAttitude, startNadir2Attitude, slewName2);
+				// From current site observation to final nadir law 
+			    final String slewNameFinal = "Slew_"+ targetSite.getName()+"_to_Nadir" ;
+			    final ConstantSpinSlew slewFinal = new ConstantSpinSlew(endObsAttitude, startNadir2Attitude, slewNameFinal);
 
 				// We create our two Nadir legs using the dates we computed
-			    final AttitudeLawLeg nadir2 = new AttitudeLawLeg(nadirLaw, startNadirLaw2, end, "Nadir_Law_2");
+			    final AttitudeLawLeg nadirFinal = new AttitudeLawLeg(nadirLaw, startNadirLaw2, end, "Nadir_Law_Final");
 			    
 			    
-			 // Finally we can add all those legs to our cinametic plan, in the chronological
+			 // Finally we can add all those legs to our cinematic plan, in the chronological
 				// order
-			    this.cinematicPlan.add(slew1);
+			    this.cinematicPlan.add(slewSite2Site);
 				this.cinematicPlan.add(siteObsLeg);
-				this.cinematicPlan.add(slew2);
-				this.cinematicPlan.add(nadir2);
+				this.cinematicPlan.add(slewFinal);
+				this.cinematicPlan.add(nadirFinal);
+		    	}
 
 		    	
 		    }
@@ -531,20 +577,53 @@ public class CompleteMission extends SimpleMission {
 		    	
 		    	
 		    	final Attitude startObsAttitude = siteObsLeg.getAttitude(propagator, obsStart, getEme2000());
-			    final Attitude endObsAttitude = siteObsLeg.getAttitude(propagator, obsEnd, getEme2000());
 			    
-			    
-			    // Finally computing the slews
-				// From last observation to current site observation
-			    final String slewName = "Slew_" + lastTargetSite.getName() + "_to_" + targetSite.getName();
-			    final ConstantSpinSlew slew1 = new ConstantSpinSlew(endLastObsAttitude, startObsAttitude, slewName);
-			    
-
-				// Finally we can add all those legs to our cinametic plan, in the chronological
-				// order
-				this.cinematicPlan.add(slew1);
-				this.cinematicPlan.add(siteObsLeg);
+		    	final double deltaTimeObsNext = obsStart.durationFrom(lastObsEnd);
 		    	
+		    	//if we have enough time we come back to Nadir
+		    	if(deltaTimeObsNext > getSatellite().getMaxSlewDuration()) {
+		    		
+		    		//getting the info about the Nadir law to achieve
+			    	final AbsoluteDate startNadirLawTemp = lastObsEnd.shiftedBy(+getSatellite().getMaxSlewDuration()/2);
+			    	final AbsoluteDate endNadirLawTemp = obsStart.shiftedBy(-getSatellite().getMaxSlewDuration()/2);
+			    	final Attitude startNadirTempAttitude = nadirLaw.getAttitude(propagator, startNadirLawTemp, getEme2000());
+			    	
+		    		// Finally computing the slews
+					// From last observation to temporary Nadir
+				    final String slewNameLastObs2Nadir = "Slew_" + lastTargetSite.getName() + "_to_Nadir";
+				    final ConstantSpinSlew slewLastObs2Nadir = new ConstantSpinSlew(endLastObsAttitude, startNadirTempAttitude, slewNameLastObs2Nadir);
+				    
+				    // We create the temporary Nadir leg
+				    final AttitudeLawLeg nadirTemp = new AttitudeLawLeg(nadirLaw,startNadirLawTemp,endNadirLawTemp , "Nadir_Law_Temp");
+
+				    // From temporary Nadir to current observation
+				    
+				    final String slewNameNadir2Obs = "Slew_Nadir_to_" + targetSite.getName();
+				    final Attitude endNadirTempAttitude = nadirTemp.getAttitude(propagator, endNadirLawTemp, getEme2000());
+				    final ConstantSpinSlew slewNadir2Obs = new ConstantSpinSlew(endNadirTempAttitude, startObsAttitude, slewNameNadir2Obs);
+				   
+					// Finally we can add all those legs to our cinematic plan, in the chronological
+					// order
+				    this.cinematicPlan.add(slewLastObs2Nadir);
+				    this.cinematicPlan.add(nadirTemp);
+				    this.cinematicPlan.add(slewNadir2Obs);
+					this.cinematicPlan.add(siteObsLeg);
+		    		
+		    		
+		    	}else {
+				    
+				    
+				    // Finally computing the slews
+					// From last observation to current site observation
+				    final String slewName = "Slew_" + lastTargetSite.getName() + "_to_" + targetSite.getName();
+				    final ConstantSpinSlew slew1 = new ConstantSpinSlew(endLastObsAttitude, startObsAttitude, slewName);
+				    
+	
+					// Finally we can add all those legs to our cinametic plan, in the chronological
+					// order
+					this.cinematicPlan.add(slew1);
+					this.cinematicPlan.add(siteObsLeg);
+		    	}
 		    
 		    }
 		    
