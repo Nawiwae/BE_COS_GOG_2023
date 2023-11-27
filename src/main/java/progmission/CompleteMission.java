@@ -281,7 +281,7 @@ public class CompleteMission extends SimpleMission {
 				// Getting the begining/end of the accessIntervall as AbsoluteDate objects
 				final AbsoluteDate date1 = accessInterval.getLowerData();
 				final AbsoluteDate date2 = accessInterval.getUpperData();
-
+				final AbsoluteDate mid = accessInterval.getMiddleDate();
 				
 				final double maxSlewDuration = this.getSatellite().getMaxSlewDuration();
 				
@@ -294,7 +294,7 @@ public class CompleteMission extends SimpleMission {
 				*/
 				
 				if ((observedTargetList.isEmpty() && date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME) ||
-						(date2.shiftedBy(-ConstantsBE.INTEGRATION_TIME).compareTo(observationsEndDate.get(observedTargetList.size()-1).shiftedBy(maxSlewDuration))>0 
+						(mid.shiftedBy(-ConstantsBE.INTEGRATION_TIME/2).compareTo(observationsEndDate.get(observedTargetList.size()-1).shiftedBy(maxSlewDuration))>0 
 						&& !observedTargetList.contains(target) 
 						&& date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME)) {
 				
