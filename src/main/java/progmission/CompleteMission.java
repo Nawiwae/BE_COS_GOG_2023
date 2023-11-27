@@ -1,6 +1,7 @@
 package progmission;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import fr.cnes.sirius.patrius.attitudes.AttitudeProvider;
 import fr.cnes.sirius.patrius.attitudes.ConstantSpinSlew;
 import fr.cnes.sirius.patrius.attitudes.StrictAttitudeLegsSequence;
 import fr.cnes.sirius.patrius.attitudes.TargetGroundPointing;
+import fr.cnes.sirius.patrius.bodies.ExtendedOneAxisEllipsoid;
 import fr.cnes.sirius.patrius.events.CodedEvent;
 import fr.cnes.sirius.patrius.events.CodedEventsLogger;
 import fr.cnes.sirius.patrius.events.GenericCodingEventDetector;
@@ -25,10 +27,13 @@ import fr.cnes.sirius.patrius.events.postprocessing.ElementTypeFilter;
 import fr.cnes.sirius.patrius.events.postprocessing.NotCriterion;
 import fr.cnes.sirius.patrius.events.postprocessing.Timeline;
 import fr.cnes.sirius.patrius.events.sensor.SensorVisibilityDetector;
+import fr.cnes.sirius.patrius.frames.Frame;
 import fr.cnes.sirius.patrius.frames.FramesFactory;
 import fr.cnes.sirius.patrius.frames.TopocentricFrame;
+import fr.cnes.sirius.patrius.frames.transformations.Transform;
 import fr.cnes.sirius.patrius.math.geometry.euclidean.threed.Vector3D;
 import fr.cnes.sirius.patrius.math.util.FastMath;
+import fr.cnes.sirius.patrius.math.util.MathLib;
 import fr.cnes.sirius.patrius.propagation.analytical.KeplerianPropagator;
 import fr.cnes.sirius.patrius.propagation.events.EventDetector;
 import fr.cnes.sirius.patrius.propagation.events.ThreeBodiesAngleDetector;
@@ -36,6 +41,7 @@ import fr.cnes.sirius.patrius.time.AbsoluteDate;
 import fr.cnes.sirius.patrius.time.AbsoluteDateInterval;
 import fr.cnes.sirius.patrius.time.AbsoluteDateIntervalsList;
 import fr.cnes.sirius.patrius.utils.exception.PatriusException;
+import fr.cnes.sirius.patrius.orbits.pvcoordinates.PVCoordinates;
 import fr.cnes.sirius.patrius.orbits.pvcoordinates.PVCoordinatesProvider;
 import fr.cnes.sirius.patrius.assembly.models.SensorModel;
 import fr.cnes.sirius.patrius.propagation.events.ConstantRadiusProvider;
@@ -118,6 +124,57 @@ public class CompleteMission extends SimpleMission {
 		this.cinematicPlan = new StrictAttitudeLegsSequence<>();
 
 	}
+	
+	private List<Phenomenon> CreateSortedAccessesforATarget(Site target,Phenomenon accessWindow) {
+		
+		final Frame eme2000 = this.getEme2000();
+		
+		final ExtendedOneAxisEllipsoid earth = this.getEarth();
+		
+		
+		final class AccessComparator implements Comparator<Phenomenon> {
+		    @Override
+		    public int compare(Phenomenon w1, Phenomenon w2) {
+		    	
+				final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
+				final AbsoluteDate middleDate = accessInterval.getMiddleDate();
+
+				// Creating a new propagator to compute the satellite's pv coordinates
+				final KeplerianPropagator propagator = createDefaultPropagator();
+
+				// Calculating the satellite PVCoordinates at middleDate
+				final PVCoordinates satPv = propagator.getPVCoordinates(middleDate, eme2000);
+
+				// Calculating the Site PVCoordinates at middleDate
+				final TopocentricFrame siteFrame = new TopocentricFrame(earth, target.getPoint(), target.getName());
+				final PVCoordinates sitePv = siteFrame.getPVCoordinates(middleDate, eme2000);
+
+				// Calculating the normalized site-sat vector at middleDate
+				final Vector3D siteSatVectorEme2000 = satPv.getPosition().subtract(sitePv.getPosition()).normalize();
+
+				// Calculating the vector normal to the surface at the Site at middleDate
+				final Vector3D siteNormalVectorEarthFrame = siteFrame.getZenith();
+				final Transform earth2Eme2000 = siteFrame.getParentShape().getBodyFrame().getTransformTo(eme2000, middleDate);
+				final Vector3D siteNormalVectorEme2000 = earth2Eme2000.transformPosition(siteNormalVectorEarthFrame);
+
+				// Finally, we can compute the incidence angle = angle between
+				// siteNormalVectorEme2000 and siteSatVectorEme2000
+				final double incidenceAngle = Vector3D.angle(siteNormalVectorEme2000, siteSatVectorEme2000);
+				
+				return (int) (100*MathLib.cos(incidenceAngle));
+		    	
+		    	
+		    	
+		    	
+		    	
+		        return Integer.compare(w1.getRanking(), p2.getRanking());
+		    }
+		}
+		
+
+	}
+	
+	
 
 	/**
 	 * [COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
@@ -239,17 +296,51 @@ public class CompleteMission extends SimpleMission {
 		
 		List<Site> observedTargetList = new ArrayList<>();
 		
+		List<Site> targets = this.getSiteList();
 		
-		
-		for (final Entry<Site, Timeline> entry : this.accessPlan.entrySet()) {
-			// Scrolling through the entries of the accessPlan
-			// Getting the target Site
-			final Site target = entry.getKey();
+		/*
+		 * Les sites sont déjà classés par ordre d'importance de par leur nombre d'habitants
+		 * Donc pour faire un glouton on n'a qu'à parcourir les sites dans l'ordre 
+		 */
+		for (Site target : targets) {
 	
 			// Getting its access Timeline
-			final Timeline timeline = entry.getValue();
+			final Timeline timeline = this.accessPlan.get(target);
 			// Getting the access intervals;
 			final AbsoluteDateIntervalsList accessIntervals = new AbsoluteDateIntervalsList();
+			for (final Phenomenon accessWindow : timeline.getPhenomenaList()) {
+				final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
+				accessIntervals.add(accessInterval);
+				final AbsoluteDate middleDate = accessInterval.getMiddleDate();
+
+				// Creating a new propagator to compute the satellite's pv coordinates
+				final KeplerianPropagator propagator = createDefaultPropagator();
+
+				// Calculating the satellite PVCoordinates at middleDate
+				final PVCoordinates satPv = propagator.getPVCoordinates(middleDate, this.getEme2000());
+
+				// Calculating the Site PVCoordinates at middleDate
+				final TopocentricFrame siteFrame = new TopocentricFrame(this.getEarth(), target.getPoint(), target.getName());
+				final PVCoordinates sitePv = siteFrame.getPVCoordinates(middleDate, this.getEme2000());
+
+				// Calculating the normalized site-sat vector at middleDate
+				final Vector3D siteSatVectorEme2000 = satPv.getPosition().subtract(sitePv.getPosition()).normalize();
+
+				// Calculating the vector normal to the surface at the Site at middleDate
+				final Vector3D siteNormalVectorEarthFrame = siteFrame.getZenith();
+				final Transform earth2Eme2000 = siteFrame.getParentShape().getBodyFrame().getTransformTo(this.getEme2000(), middleDate);
+				final Vector3D siteNormalVectorEme2000 = earth2Eme2000.transformPosition(siteNormalVectorEarthFrame);
+
+				// Finally, we can compute the incidence angle = angle between
+				// siteNormalVectorEme2000 and siteSatVectorEme2000
+				final double incidenceAngle = Vector3D.angle(siteNormalVectorEme2000, siteSatVectorEme2000);
+				
+				double qualityFactor = MathLib.cos(incidenceAngle);
+				
+				logger.info("Incidence " + incidenceAngle);
+			
+			}
+			
 			for (final Phenomenon accessWindow : timeline.getPhenomenaList()) {
 				// The Phenomena are sorted chronologically so the accessIntervals List is too
 			    final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
@@ -690,6 +781,7 @@ public class CompleteMission extends SimpleMission {
 		 * This is how you add a detector to a propagator, feel free to add several
 		 * detectors to the satellite propagator !
 		 */
+		
 		this.createDefaultPropagator().addEventDetector(VisibilityDetector);
 		
 		
