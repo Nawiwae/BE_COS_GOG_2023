@@ -349,7 +349,6 @@ public class CompleteMission extends SimpleMission {
 					
 					
 					
-					
 				}
 		
 
@@ -500,11 +499,11 @@ public class CompleteMission extends SimpleMission {
 			    final double deltaTimeObsNext = obsStart.durationFrom(lastObsEnd);
 		    	
 		    	//if we have enough time we come back to Nadir
-		    	if(deltaTimeObsNext > getSatellite().getMaxSlewDuration()) {
+		    	if(deltaTimeObsNext > getSatellite().getMaxSlewDuration()* 2) {
 		    		
 		    		//getting the info about the Nadir law to achieve
-			    	final AbsoluteDate startNadirLawTemp = lastObsEnd.shiftedBy(+getSatellite().getMaxSlewDuration()/2);
-			    	final AbsoluteDate endNadirLawTemp = obsStart.shiftedBy(-getSatellite().getMaxSlewDuration()/2);
+			    	final AbsoluteDate startNadirLawTemp = lastObsEnd.shiftedBy(+getSatellite().getMaxSlewDuration());
+			    	final AbsoluteDate endNadirLawTemp = obsStart.shiftedBy(-getSatellite().getMaxSlewDuration());
 			    	final Attitude startNadirTempAttitude = nadirLaw.getAttitude(propagator, startNadirLawTemp, getEme2000());
 			    	
 		    		// Finally computing the slews
@@ -581,11 +580,11 @@ public class CompleteMission extends SimpleMission {
 		    	final double deltaTimeObsNext = obsStart.durationFrom(lastObsEnd);
 		    	
 		    	//if we have enough time we come back to Nadir
-		    	if(deltaTimeObsNext > getSatellite().getMaxSlewDuration()) {
+		    	if(deltaTimeObsNext > getSatellite().getMaxSlewDuration() * 2) {
 		    		
 		    		//getting the info about the Nadir law to achieve
-			    	final AbsoluteDate startNadirLawTemp = lastObsEnd.shiftedBy(+getSatellite().getMaxSlewDuration()/2);
-			    	final AbsoluteDate endNadirLawTemp = obsStart.shiftedBy(-getSatellite().getMaxSlewDuration()/2);
+			    	final AbsoluteDate startNadirLawTemp = lastObsEnd.shiftedBy(+getSatellite().getMaxSlewDuration());
+			    	final AbsoluteDate endNadirLawTemp = obsStart.shiftedBy(-getSatellite().getMaxSlewDuration());
 			    	final Attitude startNadirTempAttitude = nadirLaw.getAttitude(propagator, startNadirLawTemp, getEme2000());
 			    	
 		    		// Finally computing the slews
