@@ -463,7 +463,7 @@ public class CompleteMission extends SimpleMission {
 				
 				for (int i = 0 ; i < targetObservations.size(); i++){
 					
-					if ( (middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(-maxSlewDuration))>0 
+					if ( !(middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(-maxSlewDuration))>0 
 					|| middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(maxSlewDuration))<0) ) {
 						
 						accesValide = false;
