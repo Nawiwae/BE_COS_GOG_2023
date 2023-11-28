@@ -1,7 +1,8 @@
 package progmission;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,12 +51,113 @@ import utils.ConstantsBE;
 import utils.LogUtils;
 import utils.ProjectUtils;
 
+
+
+
 /**
  * This class implements the context of an Earth Observation mission.
  *
  * @author herberl
  */
 public class CompleteMission extends SimpleMission {
+	
+	final Frame eme2000 = this.getEme2000();
+	
+	final ExtendedOneAxisEllipsoid earth = this.getEarth();
+	
+	
+	class TargetAccess implements Comparable<TargetAccess> {
+		private AbsoluteDate midDate;
+		private Site site;
+
+		public TargetAccess(AbsoluteDate midDate, Site site) {
+			this.midDate = midDate;
+			this.site = site;
+		}
+
+		public AbsoluteDate getmidDate() {
+			return midDate;
+		}
+
+		public Site getSite() {
+			return site;
+		}
+
+		public int compareDates(TargetAccess ot1, TargetAccess ot2) {
+			return ot1.getmidDate().compareTo(ot2.getmidDate());
+		}
+		
+		@Override
+		public String toString() {
+			return "target access [target=" + this.getSite().getName() + ", midDate=" + this.getmidDate() + "]";
+		}
+
+		@Override
+		public int compareTo(TargetAccess ot2){
+			
+			final AbsoluteDate md1 = this.getmidDate();
+			
+			final AbsoluteDate md2 = ot2.getmidDate();
+			
+			final Site t1 = this.getSite();
+			
+			final Site t2 = ot2.getSite();
+			
+			try {
+			
+			// Creating a new propagator to compute the satellite's pv coordinates
+			final KeplerianPropagator propagator = createDefaultPropagator();
+
+			// Calculating the satellite PVCoordinates at middleDate
+			final PVCoordinates satPv1 = propagator.getPVCoordinates(md1, eme2000);
+			final PVCoordinates satPv2 = propagator.getPVCoordinates(md2, eme2000);
+
+			// Calculating the Site PVCoordinates at middleDate
+			final TopocentricFrame siteFrame1 = new TopocentricFrame(earth, t1.getPoint(), t1.getName());
+			final PVCoordinates sitePv1 = siteFrame1.getPVCoordinates(md1, eme2000);
+			
+			final TopocentricFrame siteFrame2 = new TopocentricFrame(earth, t2.getPoint(), t2.getName());
+			final PVCoordinates sitePv2 = siteFrame2.getPVCoordinates(md2, eme2000);
+
+			// Calculating the normalized site-sat vector at middleDate
+			final Vector3D siteSatVectorEme20001 = satPv1.getPosition().subtract(sitePv1.getPosition()).normalize();
+			
+			final Vector3D siteSatVectorEme20002 = satPv2.getPosition().subtract(sitePv2.getPosition()).normalize();
+
+			// Calculating the vector normal to the surface at the Site at middleDate
+			final Vector3D siteNormalVectorEarthFrame1 = siteFrame1.getZenith();
+			final Transform earth2Eme20001 = siteFrame1.getParentShape().getBodyFrame().getTransformTo(eme2000, md1);
+			final Vector3D siteNormalVectorEme20001 = earth2Eme20001.transformPosition(siteNormalVectorEarthFrame1);
+			
+			final Vector3D siteNormalVectorEarthFrame2 = siteFrame2.getZenith();
+			final Transform earth2Eme20002 = siteFrame2.getParentShape().getBodyFrame().getTransformTo(eme2000, md2);
+			final Vector3D siteNormalVectorEme20002 = earth2Eme20002.transformPosition(siteNormalVectorEarthFrame2);
+
+			// Finally, we can compute the incidence angle = angle between
+			// siteNormalVectorEme2000 and siteSatVectorEme2000
+			final double incidenceAngle1 = Vector3D.angle(siteNormalVectorEme20001, siteSatVectorEme20001);
+			
+			final double incidenceAngle2 = Vector3D.angle(siteNormalVectorEme20002, siteSatVectorEme20002);
+			
+			final double scoreT1 = t1.getScore()*MathLib.cos(incidenceAngle1);
+			
+			final double scoreT2 = t2.getScore()*MathLib.cos(incidenceAngle2);
+			
+			if (scoreT1<scoreT2) {return -1;}
+			
+			else if (scoreT1>scoreT2) {return 1;}
+			
+			else {return 0;}
+			
+			} catch (PatriusException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return 0;
+			
+		}
+	}
 
 	/**
 	 * Logger for this class.
@@ -124,56 +226,6 @@ public class CompleteMission extends SimpleMission {
 		this.cinematicPlan = new StrictAttitudeLegsSequence<>();
 
 	}
-	
-	private List<Phenomenon> CreateSortedAccessesforATarget(Site target,Phenomenon accessWindow) {
-		
-		final Frame eme2000 = this.getEme2000();
-		
-		final ExtendedOneAxisEllipsoid earth = this.getEarth();
-		
-		
-		final class AccessComparator implements Comparator<Phenomenon> {
-		    @Override
-		    public int compare(Phenomenon w1, Phenomenon w2) {
-		    	
-				final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
-				final AbsoluteDate middleDate = accessInterval.getMiddleDate();
-
-				// Creating a new propagator to compute the satellite's pv coordinates
-				final KeplerianPropagator propagator = createDefaultPropagator();
-
-				// Calculating the satellite PVCoordinates at middleDate
-				final PVCoordinates satPv = propagator.getPVCoordinates(middleDate, eme2000);
-
-				// Calculating the Site PVCoordinates at middleDate
-				final TopocentricFrame siteFrame = new TopocentricFrame(earth, target.getPoint(), target.getName());
-				final PVCoordinates sitePv = siteFrame.getPVCoordinates(middleDate, eme2000);
-
-				// Calculating the normalized site-sat vector at middleDate
-				final Vector3D siteSatVectorEme2000 = satPv.getPosition().subtract(sitePv.getPosition()).normalize();
-
-				// Calculating the vector normal to the surface at the Site at middleDate
-				final Vector3D siteNormalVectorEarthFrame = siteFrame.getZenith();
-				final Transform earth2Eme2000 = siteFrame.getParentShape().getBodyFrame().getTransformTo(eme2000, middleDate);
-				final Vector3D siteNormalVectorEme2000 = earth2Eme2000.transformPosition(siteNormalVectorEarthFrame);
-
-				// Finally, we can compute the incidence angle = angle between
-				// siteNormalVectorEme2000 and siteSatVectorEme2000
-				final double incidenceAngle = Vector3D.angle(siteNormalVectorEme2000, siteSatVectorEme2000);
-				
-				return (int) (100*MathLib.cos(incidenceAngle));
-		    	
-		    	
-		    	
-		    	
-		    	
-		        return Integer.compare(w1.getRanking(), p2.getRanking());
-		    }
-		}
-		
-
-	}
-	
 	
 
 	/**
@@ -290,61 +342,30 @@ public class CompleteMission extends SimpleMission {
 		 * which is the basis of the creation of AttitudeLawLeg objects since you need
 		 * an AbsoluteDateInterval or two AbsoluteDates to do it.
 		 */
-		List<AbsoluteDate> observationsStartDate = new ArrayList<>();
+		List<TargetAccess> targetAccesses = new ArrayList<>();
 		
-		List<AbsoluteDate> observationsEndDate = new ArrayList<>();
+		List<TargetAccess> targetObservations = new ArrayList<>();
 		
-		List<Site> observedTargetList = new ArrayList<>();
+		List<Site> accessedTarget = new ArrayList<>();
 		
 		List<Site> targets = this.getSiteList();
+		
+		final double maxSlewDuration = this.getSatellite().getMaxSlewDuration();
 		
 		/*
 		 * Les sites sont déjà classés par ordre d'importance de par leur nombre d'habitants
 		 * Donc pour faire un glouton on n'a qu'à parcourir les sites dans l'ordre 
 		 */
-		for (Site target : targets) {
+		for (Site target : targets)  {
+			// Getting the target Site
 	
 			// Getting its access Timeline
 			final Timeline timeline = this.accessPlan.get(target);
 			// Getting the access intervals;
-			final AbsoluteDateIntervalsList accessIntervals = new AbsoluteDateIntervalsList();
-			for (final Phenomenon accessWindow : timeline.getPhenomenaList()) {
-				final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
-				accessIntervals.add(accessInterval);
-				final AbsoluteDate middleDate = accessInterval.getMiddleDate();
-
-				// Creating a new propagator to compute the satellite's pv coordinates
-				final KeplerianPropagator propagator = createDefaultPropagator();
-
-				// Calculating the satellite PVCoordinates at middleDate
-				final PVCoordinates satPv = propagator.getPVCoordinates(middleDate, this.getEme2000());
-
-				// Calculating the Site PVCoordinates at middleDate
-				final TopocentricFrame siteFrame = new TopocentricFrame(this.getEarth(), target.getPoint(), target.getName());
-				final PVCoordinates sitePv = siteFrame.getPVCoordinates(middleDate, this.getEme2000());
-
-				// Calculating the normalized site-sat vector at middleDate
-				final Vector3D siteSatVectorEme2000 = satPv.getPosition().subtract(sitePv.getPosition()).normalize();
-
-				// Calculating the vector normal to the surface at the Site at middleDate
-				final Vector3D siteNormalVectorEarthFrame = siteFrame.getZenith();
-				final Transform earth2Eme2000 = siteFrame.getParentShape().getBodyFrame().getTransformTo(this.getEme2000(), middleDate);
-				final Vector3D siteNormalVectorEme2000 = earth2Eme2000.transformPosition(siteNormalVectorEarthFrame);
-
-				// Finally, we can compute the incidence angle = angle between
-				// siteNormalVectorEme2000 and siteSatVectorEme2000
-				final double incidenceAngle = Vector3D.angle(siteNormalVectorEme2000, siteSatVectorEme2000);
-				
-				double qualityFactor = MathLib.cos(incidenceAngle);
-				
-				logger.info("Incidence " + incidenceAngle);
-			
-			}
-			
+	
 			for (final Phenomenon accessWindow : timeline.getPhenomenaList()) {
 				// The Phenomena are sorted chronologically so the accessIntervals List is too
 			    final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
-				accessIntervals.add(accessInterval);
 				//logger.info(accessInterval.toString());
 
 				
@@ -370,9 +391,26 @@ public class CompleteMission extends SimpleMission {
 				// Getting the begining/end of the accessIntervall as AbsoluteDate objects
 				final AbsoluteDate date1 = accessInterval.getLowerData();
 				final AbsoluteDate date2 = accessInterval.getUpperData();
-
 				
-				final double maxSlewDuration = this.getSatellite().getMaxSlewDuration();
+				final AbsoluteDate middleDate = accessInterval.getMiddleDate();
+				
+				final TargetAccess obsTarget = new TargetAccess(middleDate,target);
+				
+				if(date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME) {
+				
+					targetAccesses.add(obsTarget);
+				
+				}
+				
+			}
+		}
+		
+		Collections.sort(targetAccesses);
+		Collections.reverse(targetAccesses);
+		
+		logger.info(targetAccesses.toString());
+		
+		for (TargetAccess targetaccess : targetAccesses) {	
 				
 				/*Rempli le premier élément de la liste des observations automatiquement avec la 
 				 * première ville qui passe
@@ -381,16 +419,61 @@ public class CompleteMission extends SimpleMission {
 				ultérieure à la dernière date de fin enregistrée + la max slew duration 
 				et que la cible n'est pas dans la liste des cibles visitées
 				*/
+			
+			Site target = targetaccess.getSite();
+			
+			AbsoluteDate middleDate = targetaccess.getmidDate();
 				
-				if ((observedTargetList.isEmpty() && date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME) ||
-						(date2.shiftedBy(-ConstantsBE.INTEGRATION_TIME).compareTo(observationsEndDate.get(observedTargetList.size()-1).shiftedBy(maxSlewDuration))>0 
-						&& !observedTargetList.contains(target) 
-						&& date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME)) {
+			if (targetObservations.isEmpty()) {
+				final AttitudeLaw observationLaw = createObservationLaw(target);
 				
-					if ((observedTargetList.isEmpty() && date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME)){
+				final AbsoluteDate obsStart = middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME / 2);
+				final AbsoluteDate obsEnd = middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME / 2);
+				final AbsoluteDateInterval obsInterval = new AbsoluteDateInterval(obsStart, obsEnd);
+				// Then, we create our AttitudeLawLeg, that we name using the name of the target
+				final String legName = "OBS_" + target.getName();
+				final AttitudeLawLeg obsLeg = new AttitudeLawLeg(observationLaw, obsInterval, legName);
+
+				// Finally, we add our leg to the plan
+				this.observationPlan.put(target, obsLeg);
+				
+				targetObservations.add(targetaccess);
+				accessedTarget.add(target);
+				
+				logger.info("Target site : " + target.getName() + "   observed from :  " + 
+				obsStart.toString() + "  to " + obsEnd.toString());
+				
+				
+			}
+			
+			/*
+			 * ((observedTargetList.isEmpty() && date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME) ||
+					(mid.shiftedBy(-ConstantsBE.INTEGRATION_TIME/2).compareTo(observationsEndDate.get(observedTargetList.size()).shiftedBy(maxSlewDuration))>0  
+					&& !observedTargetList.contains(target) 
+					&& date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME))
+			 */
+			
+			else  {
+				
+				boolean accesValide = true;
+				
+				for (int i = 0 ; i < targetObservations.size(); i++){
+					
+					if ( middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate())>0
+					&& middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(maxSlewDuration))<0 ) {
 						
-						logger.info(target.getName());
-					}
+						accesValide = false;
+						}
+					if ( middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate())<0
+					&& middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(-maxSlewDuration))>0 ) {
+								
+						accesValide = false;
+						}
+					
+				}
+			
+				if (accesValide && !accessedTarget.contains(target)){
+					
 					// Use this method to create your observation leg, see more help inside the
 					// method.
 					final AttitudeLaw observationLaw = createObservationLaw(target);
@@ -418,7 +501,7 @@ public class CompleteMission extends SimpleMission {
 					 */
 					// Here we use the middle of the accessInterval to define our dates of
 					// observation
-					final AbsoluteDate middleDate = accessInterval.getMiddleDate();
+					
 					final AbsoluteDate obsStart = middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME / 2);
 					final AbsoluteDate obsEnd = middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME / 2);
 					final AbsoluteDateInterval obsInterval = new AbsoluteDateInterval(obsStart, obsEnd);
@@ -429,22 +512,15 @@ public class CompleteMission extends SimpleMission {
 					// Finally, we add our leg to the plan
 					this.observationPlan.put(target, obsLeg);
 					
-					observationsStartDate.add(obsStart);
-					observationsEndDate.add(obsEnd);
-					observedTargetList.add(target);
+					targetObservations.add(targetaccess);
+					accessedTarget.add(target);
 					
 					logger.info("Target site : " + target.getName() + "   observed from :  " + 
 					obsStart.toString() + "  to  " + obsEnd.toString());
-					
-					
-					
-					
+					}
 				}
-		
-
+					
 			}
-
-		}
 
 		return this.observationPlan;
 	}
