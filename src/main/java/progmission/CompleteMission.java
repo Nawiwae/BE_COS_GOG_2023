@@ -463,8 +463,8 @@ public class CompleteMission extends SimpleMission {
 				
 				for (int i = 0 ; i < targetObservations.size(); i++){
 					
-					if ( !(middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(-maxSlewDuration))>0 
-					|| middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(maxSlewDuration))<0) ) {
+					if (!(middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(-maxSlewDuration))<0 
+					|| middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(maxSlewDuration))>0) ) {
 						
 						accesValide = false;
 						}
@@ -890,6 +890,9 @@ public class CompleteMission extends SimpleMission {
 		 * constraint. All the methods you code can be coded using the given
 		 * createSiteXTimeline method as a basis.
 		 */
+		
+		this.getSatellite().getPropagator().clearEventsDetectors();
+		
 	    final Timeline timeline_visibility = createSiteVisibilityTimeline(targetSite);
 	    //ProjectUtils.printTimeline(timeline_visibility);
 	    final Timeline timeline_illumination = createSiteIlluminationTimeline(targetSite);
