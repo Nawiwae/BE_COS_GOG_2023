@@ -208,6 +208,7 @@ public class CompleteMission extends SimpleMission {
 	 */
 	private final StrictAttitudeLegsSequence<AttitudeLeg> cinematicPlan;
 
+
 	/**
 	 * Constructor for the {@link CompleteMission} class.
 	 *
@@ -231,6 +232,7 @@ public class CompleteMission extends SimpleMission {
 		this.accessPlan = new HashMap<>();
 		this.observationPlan = new HashMap<>();
 		this.cinematicPlan = new StrictAttitudeLegsSequence<>();
+		
 
 	}
 	
@@ -357,7 +359,7 @@ public class CompleteMission extends SimpleMission {
 		
 		List<Site> targets = this.getSiteList();
 		
-		final double maxSlewDuration = this.getSatellite().getMaxSlewDuration();
+		Map<TargetAccess, AttitudeLawLeg> mapAllAttitudeLegs = new HashMap<>();
 		
 		
 		for (Site target : targets)  {
@@ -403,6 +405,17 @@ public class CompleteMission extends SimpleMission {
 				if(date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME) {
 				
 					targetAccesses.add(obsTarget);
+					final AttitudeLaw fullobservationLaw = createObservationLaw(target);
+					
+					final AbsoluteDate obsStart = middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME / 2);
+					final AbsoluteDate obsEnd = middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME / 2);
+					final AbsoluteDateInterval obsInterval = new AbsoluteDateInterval(obsStart, obsEnd);
+					// Then, we create our AttitudeLawLeg, that we name using the name of the target
+					final String legName = "FULLOBS_" + target.getName();
+					final AttitudeLawLeg obsLeg = new AttitudeLawLeg(fullobservationLaw, obsInterval, legName);
+
+					// Finally, we add our leg to the list
+					mapAllAttitudeLegs.put(obsTarget, obsLeg);
 				
 				}
 				
@@ -412,9 +425,10 @@ public class CompleteMission extends SimpleMission {
 		Collections.sort(targetAccesses);
 		Collections.reverse(targetAccesses);
 		
-		logger.info(targetAccesses.toString());
+		logger.info(targetAccesses.size()+targetAccesses.toString());
+		logger.info(mapAllAttitudeLegs.size()+mapAllAttitudeLegs.toString());
 		
-		for (TargetAccess targetaccess : targetAccesses) {	
+		for (int current = 0 ; current < targetAccesses.size(); current++) {	
 				
 				/*Rempli le premier élément de la liste des observations automatiquement avec la 
 				 * première ville qui passe
@@ -424,10 +438,14 @@ public class CompleteMission extends SimpleMission {
 				et que la cible n'est pas dans la liste des cibles visitées
 				*/
 			
+			TargetAccess targetaccess=targetAccesses.get(current);
+			
 			Site target = targetaccess.getSite();
 			
 			AbsoluteDate middleDate = targetaccess.getmidDate();
 				
+			final KeplerianPropagator propagator = createDefaultPropagator();
+			
 			if (targetObservations.isEmpty()) {
 				final AttitudeLaw observationLaw = createObservationLaw(target);
 				
@@ -462,21 +480,50 @@ public class CompleteMission extends SimpleMission {
 				boolean accesValide = true;
 				
 				for (int i = 0 ; i < targetObservations.size(); i++){
+			
+			    	final AttitudeLeg currentSiteObsLeg = mapAllAttitudeLegs.get(targetaccess);
+			    	final AbsoluteDate currentObsEnd = currentSiteObsLeg.getEnd();
+			    	final Attitude endCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsEnd, this.getEme2000());
+			    	
+			    	final AbsoluteDate currentObsStart = currentSiteObsLeg.getDate();
+			    	final Attitude startCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsStart, this.getEme2000());
+			    	
+			    	final AttitudeLeg iSiteObsLeg = mapAllAttitudeLegs.get(targetObservations.get(i));
+			    	final AbsoluteDate iObsEnd = iSiteObsLeg.getEnd();
+			    	final Attitude endiObsAttitude = iSiteObsLeg.getAttitude(propagator, iObsEnd, this.getEme2000());
+			    	
+			    	final AbsoluteDate iObsStart = iSiteObsLeg.getDate();
+			    	final Attitude startiObsAttitude = iSiteObsLeg.getAttitude(propagator, iObsStart, this.getEme2000());
 					
-					if (!(middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(-maxSlewDuration))<0 
-					|| middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME).compareTo(targetObservations.get(i).getmidDate().shiftedBy(maxSlewDuration))>0) ) {
-						
+					double slewDurationEndCurrentToStarti = this.getSatellite().computeSlewDuration(endCurrentObsAttitude, startiObsAttitude);
+					double slewDurationEndiToStartCurrent = this.getSatellite().computeSlewDuration(endiObsAttitude, startCurrentObsAttitude);
+					
+					if (middleDate.durationFrom(targetObservations.get(i).getmidDate())<0 
+							&& middleDate.durationFrom(targetObservations.get(i).getmidDate())>-ConstantsBE.INTEGRATION_TIME-slewDurationEndCurrentToStarti) 
+					{
 						accesValide = false;
-						}
-				
+						
+					}
+					
+					if (middleDate.compareTo(targetObservations.get(i).getmidDate())>0 
+							&& middleDate.durationFrom(targetObservations.get(i).getmidDate())<ConstantsBE.INTEGRATION_TIME+slewDurationEndiToStartCurrent) 
+					{
+						accesValide = false;
+
+					}
+					
+					logger.info(target.toString()+" Duration slews : "+slewDurationEndCurrentToStarti+ " et " + slewDurationEndiToStartCurrent + " pour " + accessedSites.get(i).toString());
 					
 				}
 			
 				if (accesValide){
 					
+					
+					
 					// Use this method to create your observation leg, see more help inside the
 					// method.
 					final AttitudeLaw observationLaw = createObservationLaw(target);
+
 					
 					/*
 					final Attitude attitude1 = observationLaw.getAttitude(this.createDefaultPropagator(), date1,
