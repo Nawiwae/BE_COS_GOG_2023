@@ -76,22 +76,22 @@ public class CompleteMission extends SimpleMission {
     	final AbsoluteDate currentObsStart = currentSiteObsLeg.getDate();
     	final Attitude startCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsStart, this.getEme2000());
     	
-    	final AttitudeLeg iSiteObsLeg = mapAllAttitudeLegs.get(othertargetaccess);
-    	final AbsoluteDate iObsEnd = iSiteObsLeg.getEnd();
-    	final Attitude endiObsAttitude = iSiteObsLeg.getAttitude(propagator, iObsEnd, this.getEme2000());
+    	final AttitudeLeg otherSiteObsLeg = mapAllAttitudeLegs.get(othertargetaccess);
+    	final AbsoluteDate otherObsEnd = otherSiteObsLeg.getEnd();
+    	final Attitude endOtherObsAttitude = otherSiteObsLeg.getAttitude(propagator, otherObsEnd, this.getEme2000());
     	
-    	final AbsoluteDate iObsStart = iSiteObsLeg.getDate();
-    	final Attitude startiObsAttitude = iSiteObsLeg.getAttitude(propagator, iObsStart, this.getEme2000());
+    	final AbsoluteDate otherObsStart = otherSiteObsLeg.getDate();
+    	final Attitude startOtherObsAttitude = otherSiteObsLeg.getAttitude(propagator, otherObsStart, this.getEme2000());
 		
-		double slewDurationEndCurrentToStarti = this.getSatellite().computeSlewDuration(endCurrentObsAttitude, startiObsAttitude);
-		double slewDurationEndiToStartCurrent = this.getSatellite().computeSlewDuration(endiObsAttitude, startCurrentObsAttitude);
+		double slewDurationEndCurrentToStartOther = this.getSatellite().computeSlewDuration(endCurrentObsAttitude, startOtherObsAttitude);
+		double slewDurationEndOtherToStartCurrent = this.getSatellite().computeSlewDuration(endOtherObsAttitude, startCurrentObsAttitude);
 		
-		if (iObsStart.compareTo(currentObsStart)<0) {
-			return slewDurationEndiToStartCurrent; 			
+		if (otherObsStart.compareTo(currentObsStart)<0) {
+			return slewDurationEndOtherToStartCurrent; 			
 		}
 		
 		else {
-			return slewDurationEndCurrentToStarti;
+			return slewDurationEndCurrentToStartOther;
 		}
 	}
 	
@@ -132,6 +132,51 @@ public class CompleteMission extends SimpleMission {
 			return ot1.getmidDate().compareTo(ot2.getmidDate());
 		}
 		
+		public double computeAccessScore() {
+			
+			final AbsoluteDate midDate = this.getmidDate();
+			
+			final Site site = this.getSite();
+			
+			try {
+			
+			// Creating a new propagator to compute the satellite's pv coordinates
+			final KeplerianPropagator propagator = createDefaultPropagator();
+
+			// Calculating the satellite PVCoordinates at middleDate
+			final PVCoordinates satPv1 = propagator.getPVCoordinates(midDate, eme2000);
+
+			// Calculating the Site PVCoordinates at middleDate
+			final TopocentricFrame siteFrame1 = new TopocentricFrame(earth, site.getPoint(), site.getName());
+			final PVCoordinates sitePv1 = siteFrame1.getPVCoordinates(midDate, eme2000);
+
+			// Calculating the normalized site-sat vector at middleDate
+			final Vector3D siteSatVectorEme20001 = satPv1.getPosition().subtract(sitePv1.getPosition()).normalize();
+
+			// Calculating the vector normal to the surface at the Site at middleDate
+			final Vector3D siteNormalVectorEarthFrame1 = siteFrame1.getZenith();
+			final Transform earth2Eme20001 = siteFrame1.getParentShape().getBodyFrame().getTransformTo(eme2000, midDate);
+			final Vector3D siteNormalVectorEme20001 = earth2Eme20001.transformPosition(siteNormalVectorEarthFrame1);
+
+			// Finally, we can compute the incidence angle = angle between
+			// siteNormalVectorEme2000 and siteSatVectorEme2000
+			final double incidenceAngle1 = Vector3D.angle(siteNormalVectorEme20001, siteSatVectorEme20001);
+			
+			final double score = site.getScore()*MathLib.cos(incidenceAngle1);
+			
+			return score;
+			
+			} catch (PatriusException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return 0;
+			
+			
+		}
+		
+		
 		@Override
 		public String toString() {
 			return "target access [target=" + this.getSite().getName() + ", midDate=" + this.getmidDate() + "]";
@@ -147,66 +192,15 @@ public class CompleteMission extends SimpleMission {
 		@Override
 		public int compareTo(TargetAccess ot2){
 			
-			final AbsoluteDate md1 = this.getmidDate();
+			double scoreT1 = this.computeAccessScore();
 			
-			final AbsoluteDate md2 = ot2.getmidDate();
-			
-			final Site t1 = this.getSite();
-			
-			final Site t2 = ot2.getSite();
-			
-			try {
-			
-			// Creating a new propagator to compute the satellite's pv coordinates
-			final KeplerianPropagator propagator = createDefaultPropagator();
-
-			// Calculating the satellite PVCoordinates at middleDate
-			final PVCoordinates satPv1 = propagator.getPVCoordinates(md1, eme2000);
-			final PVCoordinates satPv2 = propagator.getPVCoordinates(md2, eme2000);
-
-			// Calculating the Site PVCoordinates at middleDate
-			final TopocentricFrame siteFrame1 = new TopocentricFrame(earth, t1.getPoint(), t1.getName());
-			final PVCoordinates sitePv1 = siteFrame1.getPVCoordinates(md1, eme2000);
-			
-			final TopocentricFrame siteFrame2 = new TopocentricFrame(earth, t2.getPoint(), t2.getName());
-			final PVCoordinates sitePv2 = siteFrame2.getPVCoordinates(md2, eme2000);
-
-			// Calculating the normalized site-sat vector at middleDate
-			final Vector3D siteSatVectorEme20001 = satPv1.getPosition().subtract(sitePv1.getPosition()).normalize();
-			
-			final Vector3D siteSatVectorEme20002 = satPv2.getPosition().subtract(sitePv2.getPosition()).normalize();
-
-			// Calculating the vector normal to the surface at the Site at middleDate
-			final Vector3D siteNormalVectorEarthFrame1 = siteFrame1.getZenith();
-			final Transform earth2Eme20001 = siteFrame1.getParentShape().getBodyFrame().getTransformTo(eme2000, md1);
-			final Vector3D siteNormalVectorEme20001 = earth2Eme20001.transformPosition(siteNormalVectorEarthFrame1);
-			
-			final Vector3D siteNormalVectorEarthFrame2 = siteFrame2.getZenith();
-			final Transform earth2Eme20002 = siteFrame2.getParentShape().getBodyFrame().getTransformTo(eme2000, md2);
-			final Vector3D siteNormalVectorEme20002 = earth2Eme20002.transformPosition(siteNormalVectorEarthFrame2);
-
-			// Finally, we can compute the incidence angle = angle between
-			// siteNormalVectorEme2000 and siteSatVectorEme2000
-			final double incidenceAngle1 = Vector3D.angle(siteNormalVectorEme20001, siteSatVectorEme20001);
-			
-			final double incidenceAngle2 = Vector3D.angle(siteNormalVectorEme20002, siteSatVectorEme20002);
-			
-			final double scoreT1 = t1.getScore()*MathLib.cos(incidenceAngle1);
-			
-			final double scoreT2 = t2.getScore()*MathLib.cos(incidenceAngle2);
+			double scoreT2 = ot2.computeAccessScore();
 			
 			if (scoreT1<scoreT2) {return -1;}
 			
 			else if (scoreT1>scoreT2) {return 1;}
 			
 			else {return 0;}
-			
-			} catch (PatriusException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			return 0;
 			
 		}
 	}
@@ -485,9 +479,6 @@ public class CompleteMission extends SimpleMission {
 						
 					}
 					
-					logger.info(target.toString()+" Duration slews : "+slewDuration+ " et " + 
-					slewDuration + " pour " + accessedSites.get(i).toString());
-					
 				}
 			
 				if (accesValide){
@@ -501,6 +492,7 @@ public class CompleteMission extends SimpleMission {
 					targetaccess.MakeObsLeg().getDate().toString() + "  to " + targetaccess.MakeObsLeg().getEnd().toString());
 					
 					}
+				
 				}
 					
 			}
