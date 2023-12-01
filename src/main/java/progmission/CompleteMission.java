@@ -65,6 +65,36 @@ public class CompleteMission extends SimpleMission {
 	
 	final ExtendedOneAxisEllipsoid earth = this.getEarth();
 	
+	public double ComputeSlewDurationBetweenObs(Map<TargetAccess,AttitudeLawLeg> mapAllAttitudeLegs , TargetAccess currenttargetaccess, TargetAccess othertargetaccess) throws PatriusException {
+		
+		final KeplerianPropagator propagator = createDefaultPropagator();
+		
+    	final AttitudeLeg currentSiteObsLeg = mapAllAttitudeLegs.get(currenttargetaccess);
+    	final AbsoluteDate currentObsEnd = currentSiteObsLeg.getEnd();
+    	final Attitude endCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsEnd, this.getEme2000());
+    	
+    	final AbsoluteDate currentObsStart = currentSiteObsLeg.getDate();
+    	final Attitude startCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsStart, this.getEme2000());
+    	
+    	final AttitudeLeg iSiteObsLeg = mapAllAttitudeLegs.get(othertargetaccess);
+    	final AbsoluteDate iObsEnd = iSiteObsLeg.getEnd();
+    	final Attitude endiObsAttitude = iSiteObsLeg.getAttitude(propagator, iObsEnd, this.getEme2000());
+    	
+    	final AbsoluteDate iObsStart = iSiteObsLeg.getDate();
+    	final Attitude startiObsAttitude = iSiteObsLeg.getAttitude(propagator, iObsStart, this.getEme2000());
+		
+		double slewDurationEndCurrentToStarti = this.getSatellite().computeSlewDuration(endCurrentObsAttitude, startiObsAttitude);
+		double slewDurationEndiToStartCurrent = this.getSatellite().computeSlewDuration(endiObsAttitude, startCurrentObsAttitude);
+		
+		if (iObsStart.compareTo(currentObsStart)<0) {
+			return slewDurationEndiToStartCurrent; 			
+		}
+		
+		else {
+			return slewDurationEndCurrentToStarti;
+		}
+	}
+	
 	
 	class TargetAccess implements Comparable<TargetAccess> {
 		private AbsoluteDate midDate;
@@ -421,8 +451,6 @@ public class CompleteMission extends SimpleMission {
 			
 			AbsoluteDate middleDate = targetaccess.getmidDate();
 				
-			final KeplerianPropagator propagator = createDefaultPropagator();
-			
 			if (targetObservations.isEmpty()) {
 
 				this.observationPlan.put(target, targetaccess.MakeObsLeg());
@@ -449,39 +477,16 @@ public class CompleteMission extends SimpleMission {
 				
 				for (int i = 0 ; i < targetObservations.size(); i++){
 			
-			    	final AttitudeLeg currentSiteObsLeg = mapAllAttitudeLegs.get(targetaccess);
-			    	final AbsoluteDate currentObsEnd = currentSiteObsLeg.getEnd();
-			    	final Attitude endCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsEnd, this.getEme2000());
-			    	
-			    	final AbsoluteDate currentObsStart = currentSiteObsLeg.getDate();
-			    	final Attitude startCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsStart, this.getEme2000());
-			    	
-			    	final AttitudeLeg iSiteObsLeg = mapAllAttitudeLegs.get(targetObservations.get(i));
-			    	final AbsoluteDate iObsEnd = iSiteObsLeg.getEnd();
-			    	final Attitude endiObsAttitude = iSiteObsLeg.getAttitude(propagator, iObsEnd, this.getEme2000());
-			    	
-			    	final AbsoluteDate iObsStart = iSiteObsLeg.getDate();
-			    	final Attitude startiObsAttitude = iSiteObsLeg.getAttitude(propagator, iObsStart, this.getEme2000());
+			    	double slewDuration = ComputeSlewDurationBetweenObs(mapAllAttitudeLegs, targetaccess, targetObservations.get(i));
 					
-					double slewDurationEndCurrentToStarti = this.getSatellite().computeSlewDuration(endCurrentObsAttitude, startiObsAttitude);
-					double slewDurationEndiToStartCurrent = this.getSatellite().computeSlewDuration(endiObsAttitude, startCurrentObsAttitude);
-					
-					if (middleDate.durationFrom(targetObservations.get(i).getmidDate())<0 
-							&& middleDate.durationFrom(targetObservations.get(i).getmidDate())>-ConstantsBE.INTEGRATION_TIME-slewDurationEndCurrentToStarti) 
+					if (Math.abs(middleDate.durationFrom(targetObservations.get(i).getmidDate()))<ConstantsBE.INTEGRATION_TIME+slewDuration) 
 					{
 						accesValide = false;
 						
 					}
 					
-					if (middleDate.compareTo(targetObservations.get(i).getmidDate())>0 
-							&& middleDate.durationFrom(targetObservations.get(i).getmidDate())<ConstantsBE.INTEGRATION_TIME+slewDurationEndiToStartCurrent) 
-					{
-						accesValide = false;
-
-					}
-					
-					logger.info(target.toString()+" Duration slews : "+slewDurationEndCurrentToStarti+ " et " + 
-					slewDurationEndiToStartCurrent + " pour " + accessedSites.get(i).toString());
+					logger.info(target.toString()+" Duration slews : "+slewDuration+ " et " + 
+					slewDuration + " pour " + accessedSites.get(i).toString());
 					
 				}
 			
