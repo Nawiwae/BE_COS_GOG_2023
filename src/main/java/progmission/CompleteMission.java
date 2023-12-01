@@ -69,6 +69,21 @@ public class CompleteMission extends SimpleMission {
 	class TargetAccess implements Comparable<TargetAccess> {
 		private AbsoluteDate midDate;
 		private Site site;
+		
+		public AttitudeLawLeg MakeObsLeg() {
+			
+			final AttitudeLaw fullobservationLaw = createObservationLaw(this.site);
+			
+			final AbsoluteDate obsStart = this.midDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME / 2);
+			final AbsoluteDate obsEnd = this.midDate.shiftedBy(ConstantsBE.INTEGRATION_TIME / 2);
+			final AbsoluteDateInterval obsInterval = new AbsoluteDateInterval(obsStart, obsEnd);
+			// Then, we create our AttitudeLawLeg, that we name using the name of the target
+			final String legName = "OBS_" + site.getName();
+			final AttitudeLawLeg obsLeg = new AttitudeLawLeg(fullobservationLaw, obsInterval, legName);
+
+			return obsLeg;
+			
+		}
 
 		public TargetAccess(AbsoluteDate midDate, Site site) {
 			this.midDate = midDate;
@@ -363,70 +378,32 @@ public class CompleteMission extends SimpleMission {
 		
 		
 		for (Site target : targets)  {
-			// Getting the target Site
-	
-			// Getting its access Timeline
+
 			final Timeline timeline = this.accessPlan.get(target);
-			// Getting the access intervals;
 	
 			for (final Phenomenon accessWindow : timeline.getPhenomenaList()) {
 				// The Phenomena are sorted chronologically so the accessIntervals List is too
 			    final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
-				//logger.info(accessInterval.toString());
 
-				
-
-				/**
-				 * Now that you have your observation law, you can compute at any AbsoluteDate
-				 * the Attitude of your Satellite pointing the target (using the getAttitude()
-				 * method). You can use those Attitudes to compute the duration of a slew from
-				 * one Attitude to another, for example the duration of the slew from the
-				 * Attitude at the end of an observation to the Atittude at the start of the
-				 * next one. That's how you will be able to choose a valid AbsoluteDateInterval
-				 * during which the observation will actually be performed, lasting
-				 * ConstantsBE.INTEGRATION_TIME seconds. When you have your observation
-				 * interval, you can build an AttitudeLawLeg using the observationLaw and this
-				 * interval and finally add this leg to the observation plan.
-				 */
-				/*
-				 * Here is an example of how to compute an Attitude. You need a
-				 * PVCoordinatePropagator (which we provide we the method
-				 * SimpleMission#createDefaultPropagator()), an AbsoluteDate and a Frame (which
-				 * we provide with this.getEME2000()).
-				 */
-				// Getting the begining/end of the accessIntervall as AbsoluteDate objects
-				final AbsoluteDate date1 = accessInterval.getLowerData();
-				final AbsoluteDate date2 = accessInterval.getUpperData();
+				final AbsoluteDate debutAccess = accessInterval.getLowerData();
+				final AbsoluteDate finAccess = accessInterval.getUpperData();
 				
 				final AbsoluteDate middleDate = accessInterval.getMiddleDate();
 				
 				final TargetAccess obsTarget = new TargetAccess(middleDate,target);
 				
-				if(date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME) {
+				if(finAccess.durationFrom(debutAccess)>= ConstantsBE.INTEGRATION_TIME) {
 				
 					targetAccesses.add(obsTarget);
-					final AttitudeLaw fullobservationLaw = createObservationLaw(target);
-					
-					final AbsoluteDate obsStart = middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME / 2);
-					final AbsoluteDate obsEnd = middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME / 2);
-					final AbsoluteDateInterval obsInterval = new AbsoluteDateInterval(obsStart, obsEnd);
-					// Then, we create our AttitudeLawLeg, that we name using the name of the target
-					final String legName = "FULLOBS_" + target.getName();
-					final AttitudeLawLeg obsLeg = new AttitudeLawLeg(fullobservationLaw, obsInterval, legName);
 
-					// Finally, we add our leg to the list
-					mapAllAttitudeLegs.put(obsTarget, obsLeg);
+					mapAllAttitudeLegs.put(obsTarget, obsTarget.MakeObsLeg());
 				
 				}
 				
 			}
 		}
 		
-		Collections.sort(targetAccesses);
-		Collections.reverse(targetAccesses);
-		
-		logger.info(targetAccesses.size()+targetAccesses.toString());
-		logger.info(mapAllAttitudeLegs.size()+mapAllAttitudeLegs.toString());
+		Collections.sort(targetAccesses,Collections.reverseOrder());
 		
 		for (int current = 0 ; current < targetAccesses.size(); current++) {	
 				
@@ -447,32 +424,23 @@ public class CompleteMission extends SimpleMission {
 			final KeplerianPropagator propagator = createDefaultPropagator();
 			
 			if (targetObservations.isEmpty()) {
-				final AttitudeLaw observationLaw = createObservationLaw(target);
-				
-				final AbsoluteDate obsStart = middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME / 2);
-				final AbsoluteDate obsEnd = middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME / 2);
-				final AbsoluteDateInterval obsInterval = new AbsoluteDateInterval(obsStart, obsEnd);
-				// Then, we create our AttitudeLawLeg, that we name using the name of the target
-				final String legName = "OBS_" + target.getName();
-				final AttitudeLawLeg obsLeg = new AttitudeLawLeg(observationLaw, obsInterval, legName);
 
-				// Finally, we add our leg to the plan
-				this.observationPlan.put(target, obsLeg);
+				this.observationPlan.put(target, targetaccess.MakeObsLeg());
 				
 				targetObservations.add(targetaccess);
 				accessedSites.add(target);
 				
 				logger.info("Target site : " + target.getName() + "   observed from :  " + 
-				obsStart.toString() + "  to " + obsEnd.toString());
+				targetaccess.MakeObsLeg().getDate().toString() + "  to " + targetaccess.MakeObsLeg().getEnd().toString());
 				
 				
 			}
 			
 			/*
-			 * ((observedTargetList.isEmpty() && date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME) ||
+			 * ((observedTargetList.isEmpty() && finAccess.durationFrom(debutAccess)>= ConstantsBE.INTEGRATION_TIME) ||
 					(mid.shiftedBy(-ConstantsBE.INTEGRATION_TIME/2).compareTo(observationsEndDate.get(observedTargetList.size()).shiftedBy(maxSlewDuration))>0  
 					&& !observedTargetList.contains(target) 
-					&& date2.durationFrom(date1)>= ConstantsBE.INTEGRATION_TIME))
+					&& finAccess.durationFrom(debutAccess)>= ConstantsBE.INTEGRATION_TIME))
 			 */
 			
 			else if (!accessedSites.contains(target)){
@@ -512,58 +480,21 @@ public class CompleteMission extends SimpleMission {
 
 					}
 					
-					logger.info(target.toString()+" Duration slews : "+slewDurationEndCurrentToStarti+ " et " + slewDurationEndiToStartCurrent + " pour " + accessedSites.get(i).toString());
+					logger.info(target.toString()+" Duration slews : "+slewDurationEndCurrentToStarti+ " et " + 
+					slewDurationEndiToStartCurrent + " pour " + accessedSites.get(i).toString());
 					
 				}
 			
 				if (accesValide){
-					
-					
-					
-					// Use this method to create your observation leg, see more help inside the
-					// method.
-					final AttitudeLaw observationLaw = createObservationLaw(target);
-
-					
-					/*
-					final Attitude attitude1 = observationLaw.getAttitude(this.createDefaultPropagator(), date1,
-							this.getEme2000());
-					final Attitude attitude2 = observationLaw.getAttitude(this.createDefaultPropagator(), date2,
-							this.getEme2000());
-					*/
-					/**
-					 * Let's say after comparing several observation slews, you find a valid couple
-					 * of dates defining your observation window : {obsStart;obsEnd}, with
-					 * obsEnd.durationFrom(obsStart) == ConstantsBE.INTEGRATION_TIME.
-					 * 
-					 * Then you can use those dates to create your AtittudeLawLeg that you will
-					 * insert inside the observaiton plan, for this target. Reminder : only one
-					 * observation in the observation plan per target !
-					 * 
-					 * WARNING : what we do here doesn't work, we didn't check that there wasn't
-					 * another target observed while inserting this target observation, it's up to
-					 * you to build your observation plan using the methods and tips we provide. You
-					 * can also only insert one observation for each pass of the satellite and it's
-					 * fine.
-					 */
-					// Here we use the middle of the accessInterval to define our dates of
-					// observation
-					
-					final AbsoluteDate obsStart = middleDate.shiftedBy(-ConstantsBE.INTEGRATION_TIME / 2);
-					final AbsoluteDate obsEnd = middleDate.shiftedBy(ConstantsBE.INTEGRATION_TIME / 2);
-					final AbsoluteDateInterval obsInterval = new AbsoluteDateInterval(obsStart, obsEnd);
-					// Then, we create our AttitudeLawLeg, that we name using the name of the target
-					final String legName = "OBS_" + target.getName();
-					final AttitudeLawLeg obsLeg = new AttitudeLawLeg(observationLaw, obsInterval, legName);
-
-					// Finally, we add our leg to the plan
-					this.observationPlan.put(target, obsLeg);
+	
+					this.observationPlan.put(target, targetaccess.MakeObsLeg());
 					
 					targetObservations.add(targetaccess);
 					accessedSites.add(target);
 					
 					logger.info("Target site : " + target.getName() + "   observed from :  " + 
-					obsStart.toString() + "  to  " + obsEnd.toString());
+					targetaccess.MakeObsLeg().getDate().toString() + "  to " + targetaccess.MakeObsLeg().getEnd().toString());
+					
 					}
 				}
 					
