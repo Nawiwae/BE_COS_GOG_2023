@@ -275,120 +275,30 @@ public class CompleteMission extends SimpleMission {
 
 	}
 	
-
 	/**
-	 * [COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
 	 * 
-	 * Compute the access plan.
+	 * Calcule l'observation plan
 	 * 
-	 * Reminder : the access plan corresponds to the object gathering all the
-	 * opportunities of access for all the sites of interest during the mission
-	 * horizon. One opportunity of access is defined by an access window (an
-	 * interval of time during which the satellite can observe the target and during
-	 * which all the observation conditions are achieved : visibility, incidence
-	 * angle, illumination of the scene,etc.). Here, we suggest you use the Patrius
-	 * class {@link Timeline} to encapsulate all the access windows of each site of
-	 * interest. One access window will then be described by the {@link Phenomenon}
-	 * object, itself defined by two {@link CodedEvent} objects giving the start and
-	 * end of the access window. Please find more tips and help in the submethods of
-	 * this method.
-	 * 
-	 * @return the sites access plan with one {@link Timeline} per {@link Site}
-	 * @throws PatriusException If a {@link PatriusException} occurs during the
-	 *                          computations
-	 */
-	public Map<Site, Timeline> computeAccessPlan() throws PatriusException {
-		/**
-		 * Here you need to compute one access Timeline per target Site. You can start
-		 * with only one site and then try to compute all of them.
-		 * 
-		 * Note : when computing all the sites, try to make sure you don't decrease the
-		 * performance of the code too much. You might have some modifications to do in
-		 * order to ensure a reasonable time of execution.
-		 */
-		/*
-		 * We give a very basic example of incomplete code computing the first target
-		 * site access Timeline and adding it to the accessPlan.
-		 * 
-		 * Please complete the code below.
-		 */
-		
-		// For each site, we create the corresponding timeline, and then add it to the HashMap accessPlan
-		for (Site targetSite : this.getSiteList()) {
-			Timeline siteAccessTimeline = createSiteAccessTimeline(targetSite);
-			this.accessPlan.put(targetSite, siteAccessTimeline);
-			//ProjectUtils.printTimeline(siteAccessTimeline);
-		}
-		
-		return this.accessPlan;
-	}
-
-	/**
-	 * [COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
-	 * 
-	 * Compute the observation plan.
-	 * 
-	 * Reminder : the observation plan corresponds to the sequence of observations
-	 * programmed for the satellite during the mission horizon. Each observation is
-	 * defined by an observation window (start date; end date defining an
-	 * {@link AbsoluteDateInterval}), a target (target {@link Site}) and an
-	 * {@link AttitudeLawLeg} giving the attitude guidance to observe the target.
-	 * 
-	 * @return the sites observation plan with one {@link AttitudeLawLeg} per
+	 * @return les sites d'observation avec un {@link AttitudeLawLeg} par
 	 *         {@link Site}
-	 * @throws PatriusException If a {@link PatriusException} occurs during the
-	 *                          computations
+	 * @throws PatriusException si une {@link PatriusException} se produit 
+	 * 			pendant le calcul
 	 */
 	public Map<Site, AttitudeLawLeg> computeObservationPlan() throws PatriusException {
-		/**
-		 * Here are the big constraints and informations you need to build an
-		 * observation plan.
-		 * 
-		 * Reminder : we can perform only one observation per site of interest during
-		 * the mission horizon.
-		 * 
-		 * Objective : Now we have our access plan, listing for each Site all the access
-		 * windows. There might be up to one access window per orbit pass above each
-		 * site, so we have to decide for each Site which access window will be used to
-		 * achieve the observation of the Site. Then, during one access window, we have
-		 * to decide when precisely we perform the observation, which lasts a constant
-		 * duration which is much smaller than the access window itself (see
-		 * ConstantsBE.INTEGRATION_TIME for the duration of one observation). Finally,
-		 * we must respect the cinematic constraint : using the
-		 * Satellite#computeSlewDuration() method, we need to ensure that the
-		 * theoritical duration of the slew between two consecutive observations is
-		 * always smaller than the actual duration between those consecutive
-		 * observations. Same goes for the slew between a Nadir pointing law and another
-		 * poiting law. Of course, we cannot point two targets at once, so we cannot
-		 * perform two observations during the same AbsoluteDateInterval !
-		 * 
-		 * Tip 1 : Here you can use the greedy algorithm presented in class, or any
-		 * method you want. You just have to ensure that all constraints are respected.
-		 * This is a non linear, complex optimization problem (scheduling problem), so
-		 * there is no universal answer. Even if you don't manage to build an optimal
-		 * plan, try to code a suboptimal algorithm anyway, we will value any idea you
-		 * have. For example, try with a plan where you have only one observation per
-		 * satellite pass over France. With that kind of plan, you make sure all
-		 * cinematic constraint are respected (no slew to fast for the satellite
-		 * agility) and you have a basic plan to use to build your cinematic plan and
-		 * validate with VTS visualization.
-		 * 
-		 * Tip 2 : We provide the observation plan format : a Map of AttitudeLawLeg. In
-		 * doing so, we give you the structure that you must obtain in order to go
-		 * further. If you check the Javadoc of the AttitudeLawLeg class, you see that
-		 * you have two inputs. First, you must provide a specific interval of time that
-		 * you have to chose inside one of the access windows of your access plan. Then,
-		 * we give you which law to use for observation legs : TargetGroundPointing.
-		 * 
-		 */
+
 		/*
-		 * We provide a basic and incomplete code that you can use to compute the
-		 * observation plan.
+		 * La structure de l'algorythme choisi nécessite d'avoir une liste complète des accès : 
+		 * targetAccesses qui sera construite classée dans l'ordre décroissant des scores des accès
+		 * pour faire un glouton simple
 		 * 
-		 * Here the only thing we do is printing all the access opportunities using the
-		 * Timeline objects. We get a list of AbsoluteDateInterval from the Timelines,
-		 * which is the basis of the creation of AttitudeLawLeg objects since you need
-		 * an AbsoluteDateInterval or two AbsoluteDates to do it.
+		 * la liste targetObservations sera remplie plus tard au fur et à mesure qu'on vérifie 
+		 * la compatibilité des accès en descendant la liste targetAcccesses
+		 * 
+		 * accessed Sites sera remplie en même temps que targetObservations pour des raisons de simplicité 
+		 * quand on cherche à vérifier si un Site a été visité au préalable ou non. 
+		 * 
+		 * La HashMap mapAllAttitudeLegs quand à elle servira au calcul des durées entre les observations 
+		 * pour la vérification de la compatibilité des accès.
 		 */
 		List<TargetAccess> targetAccesses = new ArrayList<>();
 		
@@ -400,7 +310,10 @@ public class CompleteMission extends SimpleMission {
 		
 		Map<TargetAccess, AttitudeLawLeg> mapAllAttitudeLegs = new HashMap<>();
 		
-		
+		/*
+		 * Un permier parcours des Sites et des fenêtres d'accès permet de construire la liste et la 
+		 * HashMap utile que l'on va ensuite trier
+		 */
 		for (Site target : targets)  {
 
 			final Timeline timeline = this.accessPlan.get(target);
@@ -417,6 +330,12 @@ public class CompleteMission extends SimpleMission {
 				final TargetAccess obsTarget = new TargetAccess(middleDate,target);
 				
 				if(finAccess.durationFrom(debutAccess)>= ConstantsBE.INTEGRATION_TIME) {
+					
+					/*
+					 * simple vérification que l'accès est compatible avec la durée d'observation
+					 * vraisemblablement pas utile mais rend le code plus résilient en cas d'accès 
+					 * à l'extrême bord de l'angle de visibilité
+					 */
 				
 					targetAccesses.add(obsTarget);
 
@@ -427,16 +346,20 @@ public class CompleteMission extends SimpleMission {
 			}
 		}
 		
+		/*
+		 * tri des accès selon le score prenant en compte l'incidence
+		 */
+		
 		Collections.sort(targetAccesses,Collections.reverseOrder());
 		
 		for (int current = 0 ; current < targetAccesses.size(); current++) {	
 				
-				/*Rempli le premier élément de la liste des observations automatiquement avec la 
+				/* Rempli le premier élément de la liste des observations automatiquement avec la 
 				 * première ville qui passe
 				 * ET est observable pendant plus de ConstantsBE.INTEGRATION_TIME OU ALORS
-				*va executer le code suivant si la date de début de l'interval d'accès est 
-				ultérieure à la dernière date de fin enregistrée + la max slew duration 
-				et que la cible n'est pas dans la liste des cibles visitées
+				 * vérifie si l'accès actuel (ou current dans le code) est compatible ou non
+				 * avec les accès précédemment sélectionnés en fonction du délai entre les
+				 * deux et du temps nécessaire à effectuer le changement d'attitude
 				*/
 			
 			TargetAccess targetaccess=targetAccesses.get(current);
@@ -458,24 +381,25 @@ public class CompleteMission extends SimpleMission {
 				
 			}
 			
-			/*
-			 * ((observedTargetList.isEmpty() && finAccess.durationFrom(debutAccess)>= ConstantsBE.INTEGRATION_TIME) ||
-					(mid.shiftedBy(-ConstantsBE.INTEGRATION_TIME/2).compareTo(observationsEndDate.get(observedTargetList.size()).shiftedBy(maxSlewDuration))>0  
-					&& !observedTargetList.contains(target) 
-					&& finAccess.durationFrom(debutAccess)>= ConstantsBE.INTEGRATION_TIME))
-			 */
-			
 			else if (!accessedSites.contains(target)){
+				
+				// Par défaut on considère que les accès sont compatibles et on ne le
 				
 				boolean accesValide = true;
 				
 				for (int i = 0 ; i < targetObservations.size(); i++){
 			
 			    	double slewDuration = ComputeSlewDurationBetweenObs(mapAllAttitudeLegs, targetaccess, targetObservations.get(i));
+			    	
+			    	/*
+			    	 * Si l'écart entre les deux accès est inférieur au temps qu'il faut pour changer le 
+			    	 * pointage et réaliser l'observation alors l'accès est marqué comme invalide
+			    	 */
 					
 					if (Math.abs(middleDate.durationFrom(targetObservations.get(i).getmidDate()))<ConstantsBE.INTEGRATION_TIME+slewDuration) 
 					{
 						accesValide = false;
+						break;
 						
 					}
 					
@@ -499,6 +423,7 @@ public class CompleteMission extends SimpleMission {
 
 		return this.observationPlan;
 	}
+
 
 	/**
 	 * [COMPLETE THIS METHOD TO ACHIEVE YOUR PROJECT]
