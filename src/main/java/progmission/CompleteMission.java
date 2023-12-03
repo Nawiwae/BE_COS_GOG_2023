@@ -357,7 +357,7 @@ public class CompleteMission extends SimpleMission {
 			final Timeline timeline = this.accessPlan.get(target);
 	
 			for (final Phenomenon accessWindow : timeline.getPhenomenaList()) {
-				// The Phenomena are sorted chronologically so the accessIntervals List is too
+		
 			    final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
 
 				final AbsoluteDate debutAccess = accessInterval.getLowerData();
@@ -405,6 +405,8 @@ public class CompleteMission extends SimpleMission {
 			Site target = targetaccess.getSite();
 			
 			AbsoluteDate middleDate = targetaccess.getmidDate();
+
+			//By default, if the observations list is empty then it automatically takes in the best observation score-wise
 				
 			if (targetObservations.isEmpty()) {
 
