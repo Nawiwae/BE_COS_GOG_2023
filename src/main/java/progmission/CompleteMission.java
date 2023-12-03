@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 
@@ -19,7 +18,7 @@ import fr.cnes.sirius.patrius.attitudes.ConstantSpinSlew;
 import fr.cnes.sirius.patrius.attitudes.StrictAttitudeLegsSequence;
 import fr.cnes.sirius.patrius.attitudes.TargetGroundPointing;
 import fr.cnes.sirius.patrius.bodies.ExtendedOneAxisEllipsoid;
-import fr.cnes.sirius.patrius.events.CodedEvent;
+
 import fr.cnes.sirius.patrius.events.CodedEventsLogger;
 import fr.cnes.sirius.patrius.events.GenericCodingEventDetector;
 import fr.cnes.sirius.patrius.events.Phenomenon;
@@ -40,7 +39,7 @@ import fr.cnes.sirius.patrius.propagation.events.EventDetector;
 import fr.cnes.sirius.patrius.propagation.events.ThreeBodiesAngleDetector;
 import fr.cnes.sirius.patrius.time.AbsoluteDate;
 import fr.cnes.sirius.patrius.time.AbsoluteDateInterval;
-import fr.cnes.sirius.patrius.time.AbsoluteDateIntervalsList;
+
 import fr.cnes.sirius.patrius.utils.exception.PatriusException;
 import fr.cnes.sirius.patrius.orbits.pvcoordinates.PVCoordinates;
 import fr.cnes.sirius.patrius.orbits.pvcoordinates.PVCoordinatesProvider;
@@ -179,8 +178,9 @@ public class CompleteMission extends SimpleMission {
 			return score;
 			
 			} catch (PatriusException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
+				logger.error("ERROR, can't compute the access score : \n" + e.toString());
 			}
 			
 			return 0;
@@ -357,7 +357,7 @@ public class CompleteMission extends SimpleMission {
 			final Timeline timeline = this.accessPlan.get(target);
 	
 			for (final Phenomenon accessWindow : timeline.getPhenomenaList()) {
-		
+				// The Phenomena are sorted chronologically so the accessIntervals List is too
 			    final AbsoluteDateInterval accessInterval = accessWindow.getTimespan();
 
 				final AbsoluteDate debutAccess = accessInterval.getLowerData();
@@ -405,8 +405,6 @@ public class CompleteMission extends SimpleMission {
 			Site target = targetaccess.getSite();
 			
 			AbsoluteDate middleDate = targetaccess.getmidDate();
-
-			//By default, if the observations list is empty then it automatically takes in the best observation score-wise
 				
 			if (targetObservations.isEmpty()) {
 
