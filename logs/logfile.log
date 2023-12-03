@@ -1,115 +1,115 @@
-[04:05:58] INFO BEProgMissionLogger | ##################################################
-[04:06:00] INFO BEProgMissionLogger | Complete simulation starting ...
-[04:06:00] INFO BEProgMissionLogger | CompleteMission [name=BE Supaero mission, startDate=2010-09-01T00:00:00.000, endDate=2010-09-08T00:00:00.000, satellite=Pleiades 1A]
-[04:06:00] INFO BEProgMissionLogger | ##### COMPUTE ACCESS PLAN #####
-[04:06:03] INFO BEProgMissionLogger | 
+[06:51:07] INFO BEProgMissionLogger | ##################################################
+[06:51:09] INFO BEProgMissionLogger | Complete simulation starting ...
+[06:51:09] INFO BEProgMissionLogger | CompleteMission [name=BE Supaero mission, startDate=2010-09-01T00:00:00.000, endDate=2010-09-08T00:00:00.000, satellite=Pleiades 1A]
+[06:51:09] INFO BEProgMissionLogger | ##### COMPUTE ACCESS PLAN #####
+[06:51:11] INFO BEProgMissionLogger | 
 PARIS
-[04:06:03] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:03] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:08:32.585 (UTC) ; 2010-09-01T07:11:32.657 (UTC) ]
-[04:06:03] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:47:31.717 (UTC) ; 2010-09-02T07:50:11.001 (UTC) ]
-[04:06:03] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:28:20.770 (UTC) ; 2010-09-04T07:29:19.424 (UTC) ]
-[04:06:03] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:32:09.093 (UTC) ; 2010-09-04T07:32:09.094 (UTC) ]
-[04:06:03] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:45.933 (UTC) ; 2010-09-06T07:11:23.868 (UTC) ]
-[04:06:03] INFO BEProgMissionLogger | ___________________________
-[04:06:06] INFO BEProgMissionLogger | 
+[06:51:11] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:11] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:08:32.585 (UTC) ; 2010-09-01T07:11:32.657 (UTC) ]
+[06:51:11] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:47:31.717 (UTC) ; 2010-09-02T07:50:11.001 (UTC) ]
+[06:51:11] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:28:20.770 (UTC) ; 2010-09-04T07:29:19.424 (UTC) ]
+[06:51:11] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:32:09.093 (UTC) ; 2010-09-04T07:32:09.094 (UTC) ]
+[06:51:11] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:45.933 (UTC) ; 2010-09-06T07:11:23.868 (UTC) ]
+[06:51:11] INFO BEProgMissionLogger | ___________________________
+[06:51:13] INFO BEProgMissionLogger | 
 MARSEILLE
-[04:06:06] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:06] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:09:30.719 (UTC) ; 2010-09-01T07:13:19.825 (UTC) ]
-[04:06:06] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:50:36.176 (UTC) ; 2010-09-03T06:54:01.292 (UTC) ]
-[04:06:06] INFO BEProgMissionLogger | FullVisu [ 2010-09-05T06:34:08.140 (UTC) ; 2010-09-05T06:34:26.356 (UTC) ]
-[04:06:06] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:34.619 (UTC) ; 2010-09-06T07:12:20.268 (UTC) ]
-[04:06:06] INFO BEProgMissionLogger | ___________________________
-[04:06:08] INFO BEProgMissionLogger | 
+[06:51:13] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:13] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:09:30.719 (UTC) ; 2010-09-01T07:13:19.825 (UTC) ]
+[06:51:13] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:50:36.176 (UTC) ; 2010-09-03T06:54:01.292 (UTC) ]
+[06:51:13] INFO BEProgMissionLogger | FullVisu [ 2010-09-05T06:34:08.140 (UTC) ; 2010-09-05T06:34:26.356 (UTC) ]
+[06:51:13] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:34.619 (UTC) ; 2010-09-06T07:12:20.268 (UTC) ]
+[06:51:13] INFO BEProgMissionLogger | ___________________________
+[06:51:14] INFO BEProgMissionLogger | 
 LYON
-[04:06:08] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:08] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:08:56.731 (UTC) ; 2010-09-01T07:12:38.017 (UTC) ]
-[04:06:08] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:50:06.173 (UTC) ; 2010-09-03T06:53:14.169 (UTC) ]
-[04:06:08] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:09:53.627 (UTC) ; 2010-09-06T07:13:43.811 (UTC) ]
-[04:06:08] INFO BEProgMissionLogger | ___________________________
-[04:06:10] INFO BEProgMissionLogger | 
+[06:51:14] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:14] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:08:56.731 (UTC) ; 2010-09-01T07:12:38.017 (UTC) ]
+[06:51:14] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:50:06.173 (UTC) ; 2010-09-03T06:53:14.169 (UTC) ]
+[06:51:14] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:09:53.627 (UTC) ; 2010-09-06T07:13:43.811 (UTC) ]
+[06:51:14] INFO BEProgMissionLogger | ___________________________
+[06:51:16] INFO BEProgMissionLogger | 
 TOULOUSE
-[04:06:10] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:10] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:09:55.871 (UTC) ; 2010-09-01T07:13:03.558 (UTC) ]
-[04:06:10] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:51:26.596 (UTC) ; 2010-09-03T06:53:16.707 (UTC) ]
-[04:06:10] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:29:43.211 (UTC) ; 2010-09-04T07:33:32.179 (UTC) ]
-[04:06:10] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:36.155 (UTC) ; 2010-09-06T07:14:29.131 (UTC) ]
-[04:06:10] INFO BEProgMissionLogger | ___________________________
-[04:06:12] INFO BEProgMissionLogger | 
+[06:51:16] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:16] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:09:55.871 (UTC) ; 2010-09-01T07:13:03.558 (UTC) ]
+[06:51:16] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:51:26.596 (UTC) ; 2010-09-03T06:53:16.707 (UTC) ]
+[06:51:16] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:29:43.211 (UTC) ; 2010-09-04T07:33:32.179 (UTC) ]
+[06:51:16] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:36.155 (UTC) ; 2010-09-06T07:14:29.131 (UTC) ]
+[06:51:16] INFO BEProgMissionLogger | ___________________________
+[06:51:17] INFO BEProgMissionLogger | 
 NICE
-[04:06:12] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:12] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:09:16.969 (UTC) ; 2010-09-01T07:13:10.545 (UTC) ]
-[04:06:12] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:50:16.539 (UTC) ; 2010-09-03T06:53:59.141 (UTC) ]
-[04:06:12] INFO BEProgMissionLogger | FullVisu [ 2010-09-05T06:31:26.222 (UTC) ; 2010-09-05T06:34:35.508 (UTC) ]
-[04:06:12] INFO BEProgMissionLogger | ___________________________
-[04:06:14] INFO BEProgMissionLogger | 
+[06:51:17] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:17] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:09:16.969 (UTC) ; 2010-09-01T07:13:10.545 (UTC) ]
+[06:51:17] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:50:16.539 (UTC) ; 2010-09-03T06:53:59.141 (UTC) ]
+[06:51:17] INFO BEProgMissionLogger | FullVisu [ 2010-09-05T06:31:26.222 (UTC) ; 2010-09-05T06:34:35.508 (UTC) ]
+[06:51:17] INFO BEProgMissionLogger | ___________________________
+[06:51:18] INFO BEProgMissionLogger | 
 NANTES
-[04:06:14] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:14] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:47:58.237 (UTC) ; 2010-09-02T07:51:51.665 (UTC) ]
-[04:06:14] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:28:54.784 (UTC) ; 2010-09-04T07:32:43.533 (UTC) ]
-[04:06:14] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:09:59.140 (UTC) ; 2010-09-06T07:13:25.476 (UTC) ]
-[04:06:14] INFO BEProgMissionLogger | ___________________________
-[04:06:16] INFO BEProgMissionLogger | 
+[06:51:18] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:18] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:47:58.237 (UTC) ; 2010-09-02T07:51:51.665 (UTC) ]
+[06:51:18] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:28:54.784 (UTC) ; 2010-09-04T07:32:43.533 (UTC) ]
+[06:51:18] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:09:59.140 (UTC) ; 2010-09-06T07:13:25.476 (UTC) ]
+[06:51:18] INFO BEProgMissionLogger | ___________________________
+[06:51:20] INFO BEProgMissionLogger | 
 STRASBOURG
-[04:06:16] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:16] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:07:59.523 (UTC) ; 2010-09-01T07:11:50.931 (UTC) ]
-[04:06:16] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:49:01.289 (UTC) ; 2010-09-03T06:52:35.820 (UTC) ]
-[04:06:16] INFO BEProgMissionLogger | FullVisu [ 2010-09-05T06:30:12.642 (UTC) ; 2010-09-05T06:33:09.007 (UTC) ]
-[04:06:16] INFO BEProgMissionLogger | ___________________________
-[04:06:18] INFO BEProgMissionLogger | 
+[06:51:20] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:20] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:07:59.523 (UTC) ; 2010-09-01T07:11:50.931 (UTC) ]
+[06:51:20] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:49:01.289 (UTC) ; 2010-09-03T06:52:35.820 (UTC) ]
+[06:51:20] INFO BEProgMissionLogger | FullVisu [ 2010-09-05T06:30:12.642 (UTC) ; 2010-09-05T06:33:09.007 (UTC) ]
+[06:51:20] INFO BEProgMissionLogger | ___________________________
+[06:51:21] INFO BEProgMissionLogger | 
 MONTPELLIER
-[04:06:18] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:18] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:09:34.814 (UTC) ; 2010-09-01T07:13:13.578 (UTC) ]
-[04:06:18] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:50:46.807 (UTC) ; 2010-09-03T06:53:47.287 (UTC) ]
-[04:06:18] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:30.113 (UTC) ; 2010-09-06T07:14:20.784 (UTC) ]
-[04:06:18] INFO BEProgMissionLogger | ___________________________
-[04:06:20] INFO BEProgMissionLogger | 
+[06:51:21] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:21] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:09:34.814 (UTC) ; 2010-09-01T07:13:13.578 (UTC) ]
+[06:51:21] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:50:46.807 (UTC) ; 2010-09-03T06:53:47.287 (UTC) ]
+[06:51:21] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:30.113 (UTC) ; 2010-09-06T07:14:20.784 (UTC) ]
+[06:51:21] INFO BEProgMissionLogger | ___________________________
+[06:51:22] INFO BEProgMissionLogger | 
 BORDEAUX
-[04:06:20] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:20] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:10:07.010 (UTC) ; 2010-09-01T07:12:20.030 (UTC) ]
-[04:06:20] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:48:35.619 (UTC) ; 2010-09-02T07:52:22.869 (UTC) ]
-[04:06:20] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:29:27.477 (UTC) ; 2010-09-04T07:33:21.078 (UTC) ]
-[04:06:20] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:27.125 (UTC) ; 2010-09-06T07:14:09.377 (UTC) ]
-[04:06:20] INFO BEProgMissionLogger | ___________________________
-[04:06:22] INFO BEProgMissionLogger | 
+[06:51:22] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:22] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:10:07.010 (UTC) ; 2010-09-01T07:12:20.030 (UTC) ]
+[06:51:22] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:48:35.619 (UTC) ; 2010-09-02T07:52:22.869 (UTC) ]
+[06:51:22] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:29:27.477 (UTC) ; 2010-09-04T07:33:21.078 (UTC) ]
+[06:51:22] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:10:27.125 (UTC) ; 2010-09-06T07:14:09.377 (UTC) ]
+[06:51:22] INFO BEProgMissionLogger | ___________________________
+[06:51:24] INFO BEProgMissionLogger | 
 LILLE
-[04:06:22] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:22] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:08:00.511 (UTC) ; 2010-09-01T07:11:04.942 (UTC) ]
-[04:06:22] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:46:56.981 (UTC) ; 2010-09-02T07:50:38.425 (UTC) ]
-[04:06:22] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:49:25.393 (UTC) ; 2010-09-03T06:51:22.422 (UTC) ]
-[04:06:22] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:27:46.391 (UTC) ; 2010-09-04T07:31:39.410 (UTC) ]
-[04:06:22] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:08:41.672 (UTC) ; 2010-09-06T07:12:32.452 (UTC) ]
-[04:06:22] INFO BEProgMissionLogger | ___________________________
-[04:06:24] INFO BEProgMissionLogger | 
+[06:51:24] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:24] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:08:00.511 (UTC) ; 2010-09-01T07:11:04.942 (UTC) ]
+[06:51:24] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:46:56.981 (UTC) ; 2010-09-02T07:50:38.425 (UTC) ]
+[06:51:24] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:49:25.393 (UTC) ; 2010-09-03T06:51:22.422 (UTC) ]
+[06:51:24] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:27:46.391 (UTC) ; 2010-09-04T07:31:39.410 (UTC) ]
+[06:51:24] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:08:41.672 (UTC) ; 2010-09-06T07:12:32.452 (UTC) ]
+[06:51:24] INFO BEProgMissionLogger | ___________________________
+[06:51:25] INFO BEProgMissionLogger | 
 RENNES
-[04:06:24] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:24] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:47:44.846 (UTC) ; 2010-09-02T07:51:38.606 (UTC) ]
-[04:06:24] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:28:42.403 (UTC) ; 2010-09-04T07:32:29.021 (UTC) ]
-[04:06:24] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:09:47.786 (UTC) ; 2010-09-06T07:13:09.497 (UTC) ]
-[04:06:24] INFO BEProgMissionLogger | ___________________________
-[04:06:25] INFO BEProgMissionLogger | 
+[06:51:25] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:25] INFO BEProgMissionLogger | FullVisu [ 2010-09-02T07:47:44.846 (UTC) ; 2010-09-02T07:51:38.606 (UTC) ]
+[06:51:25] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:28:42.403 (UTC) ; 2010-09-04T07:32:29.021 (UTC) ]
+[06:51:25] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:09:47.786 (UTC) ; 2010-09-06T07:13:09.497 (UTC) ]
+[06:51:25] INFO BEProgMissionLogger | ___________________________
+[06:51:26] INFO BEProgMissionLogger | 
 REIMS
-[04:06:25] INFO BEProgMissionLogger | ____ Printing Timeline ____
-[04:06:25] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:08:11.535 (UTC) ; 2010-09-01T07:11:34.838 (UTC) ]
-[04:06:25] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:49:27.762 (UTC) ; 2010-09-03T06:52:02.239 (UTC) ]
-[04:06:25] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:28:07.506 (UTC) ; 2010-09-04T07:31:55.585 (UTC) ]
-[04:06:25] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:08:59.519 (UTC) ; 2010-09-06T07:12:53.184 (UTC) ]
-[04:06:25] INFO BEProgMissionLogger | ___________________________
-[04:06:25] INFO BEProgMissionLogger | {NANTES=fr.cnes.sirius.patrius.events.postprocessing.Timeline@4b41dd5c, REIMS=fr.cnes.sirius.patrius.events.postprocessing.Timeline@3b96c42e, TOULOUSE=fr.cnes.sirius.patrius.events.postprocessing.Timeline@5d066c7d, MONTPELLIER=fr.cnes.sirius.patrius.events.postprocessing.Timeline@1e461e41, STRASBOURG=fr.cnes.sirius.patrius.events.postprocessing.Timeline@5ba88be8, MARSEILLE=fr.cnes.sirius.patrius.events.postprocessing.Timeline@56928307, BORDEAUX=fr.cnes.sirius.patrius.events.postprocessing.Timeline@3899782c, LYON=fr.cnes.sirius.patrius.events.postprocessing.Timeline@1603cd68, PARIS=fr.cnes.sirius.patrius.events.postprocessing.Timeline@9ebe38b, RENNES=fr.cnes.sirius.patrius.events.postprocessing.Timeline@4b23c30a, NICE=fr.cnes.sirius.patrius.events.postprocessing.Timeline@38089a5a, LILLE=fr.cnes.sirius.patrius.events.postprocessing.Timeline@30e868be}
-[04:06:25] INFO BEProgMissionLogger | ##### COMPUTE OBSERVATION PLAN #####
-[04:06:25] INFO BEProgMissionLogger | Target site : PARIS   observed from :  2010-09-06T07:11:33.900  to 2010-09-06T07:11:43.900
-[04:06:25] INFO BEProgMissionLogger | Target site : MARSEILLE   observed from :  2010-09-01T07:11:54.272  to 2010-09-01T07:12:04.272
-[04:06:25] INFO BEProgMissionLogger | Target site : LYON   observed from :  2010-09-06T07:12:17.719  to 2010-09-06T07:12:27.719
-[04:06:25] INFO BEProgMissionLogger | Target site : TOULOUSE   observed from :  2010-09-06T07:13:01.643  to 2010-09-06T07:13:11.643
-[04:06:25] INFO BEProgMissionLogger | Target site : NICE   observed from :  2010-09-03T06:52:36.840  to 2010-09-03T06:52:46.840
-[04:06:25] INFO BEProgMissionLogger | Target site : NANTES   observed from :  2010-09-02T07:50:23.951  to 2010-09-02T07:50:33.951
-[04:06:26] INFO BEProgMissionLogger | Target site : STRASBOURG   observed from :  2010-09-01T07:10:24.227  to 2010-09-01T07:10:34.227
-[04:06:26] INFO BEProgMissionLogger | Target site : BORDEAUX   observed from :  2010-09-04T07:31:53.277  to 2010-09-04T07:32:03.277
-[04:06:26] INFO BEProgMissionLogger | Target site : LILLE   observed from :  2010-09-04T07:30:11.900  to 2010-09-04T07:30:21.900
-[04:06:26] INFO BEProgMissionLogger | Target site : RENNES   observed from :  2010-09-04T07:31:04.712  to 2010-09-04T07:31:14.712
-[04:06:26] INFO BEProgMissionLogger | Target site : REIMS   observed from :  2010-09-03T06:51:14.001  to 2010-09-03T06:51:24.001
-[04:06:26] INFO BEProgMissionLogger | {NANTES=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@42b02722, REIMS=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@d62fe5b, TOULOUSE=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@49964d75, STRASBOURG=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@528c868, MARSEILLE=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@466276d8, BORDEAUX=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@5ce8d869, LYON=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@27eedb64, PARIS=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@64c63c79, RENNES=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@31c7528f, NICE=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@2b76ff4e, LILLE=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@7a1234bf}
-[04:06:26] INFO BEProgMissionLogger | ##### COMPUTE CINEMATIC PLAN #####
-[04:06:26] INFO BEProgMissionLogger | Size : 35
+[06:51:26] INFO BEProgMissionLogger | ____ Printing Timeline ____
+[06:51:26] INFO BEProgMissionLogger | FullVisu [ 2010-09-01T07:08:11.535 (UTC) ; 2010-09-01T07:11:34.838 (UTC) ]
+[06:51:26] INFO BEProgMissionLogger | FullVisu [ 2010-09-03T06:49:27.762 (UTC) ; 2010-09-03T06:52:02.239 (UTC) ]
+[06:51:26] INFO BEProgMissionLogger | FullVisu [ 2010-09-04T07:28:07.506 (UTC) ; 2010-09-04T07:31:55.585 (UTC) ]
+[06:51:26] INFO BEProgMissionLogger | FullVisu [ 2010-09-06T07:08:59.519 (UTC) ; 2010-09-06T07:12:53.184 (UTC) ]
+[06:51:26] INFO BEProgMissionLogger | ___________________________
+[06:51:26] INFO BEProgMissionLogger | {NANTES=fr.cnes.sirius.patrius.events.postprocessing.Timeline@4b41dd5c, REIMS=fr.cnes.sirius.patrius.events.postprocessing.Timeline@3b96c42e, TOULOUSE=fr.cnes.sirius.patrius.events.postprocessing.Timeline@5d066c7d, MONTPELLIER=fr.cnes.sirius.patrius.events.postprocessing.Timeline@1e461e41, STRASBOURG=fr.cnes.sirius.patrius.events.postprocessing.Timeline@5ba88be8, MARSEILLE=fr.cnes.sirius.patrius.events.postprocessing.Timeline@56928307, BORDEAUX=fr.cnes.sirius.patrius.events.postprocessing.Timeline@3899782c, LYON=fr.cnes.sirius.patrius.events.postprocessing.Timeline@1603cd68, PARIS=fr.cnes.sirius.patrius.events.postprocessing.Timeline@9ebe38b, RENNES=fr.cnes.sirius.patrius.events.postprocessing.Timeline@4b23c30a, NICE=fr.cnes.sirius.patrius.events.postprocessing.Timeline@38089a5a, LILLE=fr.cnes.sirius.patrius.events.postprocessing.Timeline@30e868be}
+[06:51:26] INFO BEProgMissionLogger | ##### COMPUTE OBSERVATION PLAN #####
+[06:51:27] INFO BEProgMissionLogger | Target site : PARIS   observed from :  2010-09-06T07:11:33.900  to 2010-09-06T07:11:43.900
+[06:51:27] INFO BEProgMissionLogger | Target site : MARSEILLE   observed from :  2010-09-01T07:11:54.272  to 2010-09-01T07:12:04.272
+[06:51:27] INFO BEProgMissionLogger | Target site : LYON   observed from :  2010-09-06T07:12:17.719  to 2010-09-06T07:12:27.719
+[06:51:27] INFO BEProgMissionLogger | Target site : TOULOUSE   observed from :  2010-09-06T07:13:01.643  to 2010-09-06T07:13:11.643
+[06:51:27] INFO BEProgMissionLogger | Target site : NICE   observed from :  2010-09-03T06:52:36.840  to 2010-09-03T06:52:46.840
+[06:51:27] INFO BEProgMissionLogger | Target site : NANTES   observed from :  2010-09-02T07:50:23.951  to 2010-09-02T07:50:33.951
+[06:51:27] INFO BEProgMissionLogger | Target site : STRASBOURG   observed from :  2010-09-01T07:10:24.227  to 2010-09-01T07:10:34.227
+[06:51:27] INFO BEProgMissionLogger | Target site : BORDEAUX   observed from :  2010-09-04T07:31:53.277  to 2010-09-04T07:32:03.277
+[06:51:27] INFO BEProgMissionLogger | Target site : LILLE   observed from :  2010-09-04T07:30:11.900  to 2010-09-04T07:30:21.900
+[06:51:27] INFO BEProgMissionLogger | Target site : RENNES   observed from :  2010-09-04T07:31:04.712  to 2010-09-04T07:31:14.712
+[06:51:27] INFO BEProgMissionLogger | Target site : REIMS   observed from :  2010-09-03T06:51:14.001  to 2010-09-03T06:51:24.001
+[06:51:27] INFO BEProgMissionLogger | {NANTES=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@42b02722, REIMS=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@d62fe5b, TOULOUSE=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@49964d75, STRASBOURG=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@528c868, MARSEILLE=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@466276d8, BORDEAUX=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@5ce8d869, LYON=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@27eedb64, PARIS=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@64c63c79, RENNES=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@31c7528f, NICE=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@2b76ff4e, LILLE=fr.cnes.sirius.patrius.attitudes.AttitudeLawLeg@7a1234bf}
+[06:51:27] INFO BEProgMissionLogger | ##### COMPUTE CINEMATIC PLAN #####
+[06:51:27] INFO BEProgMissionLogger | Size : 35
 1 : [ 2010-09-01T00:00:00.000 ; 2010-09-01T07:09:45.060 ] — Nadir_Law_Initial
 2 : [ 2010-09-01T07:09:45.060 ; 2010-09-01T07:10:24.227 ] — Slew_Nadir_to_STRASBOURG
 3 : [ 2010-09-01T07:10:24.227 ; 2010-09-01T07:10:34.227 ] — OBS_STRASBOURG
@@ -146,137 +146,137 @@ REIMS
 34 : [ 2010-09-06T07:13:11.643 ; 2010-09-06T07:13:50.809 ] — Slew_TOULOUSE_to_Nadir
 35 : [ 2010-09-06T07:13:50.809 ; 2010-09-08T00:00:00.000 ] — Nadir_Law_Final
 
-[04:06:26] INFO BEProgMissionLogger | Nadir_Law_Initial
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_Nadir_to_STRASBOURG
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_STRASBOURG
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_STRASBOURG_to_Nadir
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Nadir_Law_Temp
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_Nadir_to_MARSEILLE
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_MARSEILLE
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_MARSEILLE_to_Nadir
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Nadir_Law_Temp
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_Nadir_to_NANTES
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_NANTES
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_NANTES_to_Nadir
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Nadir_Law_Temp
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_Nadir_to_REIMS
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_REIMS
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_REIMS_to_NICE
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_NICE
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_NICE_to_Nadir
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Nadir_Law_Temp
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_Nadir_to_LILLE
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_LILLE
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_LILLE_to_RENNES
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_RENNES
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_RENNES_to_BORDEAUX
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_BORDEAUX
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_BORDEAUX_to_Nadir
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Nadir_Law_Temp
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_Nadir_to_PARIS
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_PARIS
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_PARIS_to_LYON
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_LYON
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_LYON_to_TOULOUSE
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | OBS_TOULOUSE
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Slew_TOULOUSE_to_Nadir
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | Nadir_Law_Final
-[04:06:26] INFO BEProgMissionLogger | Cinematic is ok
-[04:06:26] INFO BEProgMissionLogger | ==== Is the cinematic plan valid ? => true ==== 
-[04:06:26] INFO BEProgMissionLogger | Plan validity : true
-[04:06:26] INFO BEProgMissionLogger | Number of cities visited : 11
-[04:06:26] INFO BEProgMissionLogger | ==== Evaluation of the final score ====
-[04:06:26] INFO BEProgMissionLogger | Site : NANTES GeodeticPoint: name=NANTES, latitude=0.8240868769264067, longitude=-0.02705260340591211, altitude=27.0
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.061783401828685594
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 3.5399281687445368
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of NANTES : 283300.0*0.9980920126740715 = 282759.4671905645
-[04:06:26] INFO BEProgMissionLogger | Site : REIMS GeodeticPoint: name=REIMS, latitude=0.8595746566072073, longitude=0.0703948883194629, altitude=105.5
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.7895964054697177
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 45.24054155211529
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of REIMS : 181500.0*0.7041319530155999 = 127799.94947233138
-[04:06:26] INFO BEProgMissionLogger | Site : TOULOUSE GeodeticPoint: name=TOULOUSE, latitude=0.7609635538695277, longitude=0.025016327767610324, altitude=189.0
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.10601421707747637
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 6.074167206923132
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of TOULOUSE : 439600.0*0.9943857540607314 = 437131.97748509754
-[04:06:26] INFO BEProgMissionLogger | Site : STRASBOURG GeodeticPoint: name=STRASBOURG, latitude=0.8479385464841611, longitude=0.13526301702956053, altitude=141.5
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.18660669082001158
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 10.691775812889306
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of STRASBOURG : 272100.0*0.9826394368478264 = 267376.19076629356
-[04:06:26] INFO BEProgMissionLogger | Site : MARSEILLE GeodeticPoint: name=MARSEILLE, latitude=0.7556699702482289, longitude=0.09383570737129793, altitude=320.0
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.2529475618151831
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 14.49282773013449
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of MARSEILLE : 851400.0*0.9681789752924083 = 824307.5795639564
-[04:06:26] INFO BEProgMissionLogger | Site : BORDEAUX GeodeticPoint: name=BORDEAUX, latitude=0.7824886995343738, longitude=-0.009890204912398708, altitude=21.5
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.05387071825370449
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 3.0865647952756317
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of BORDEAUX : 235900.0*0.9985493237367659 = 235557.78546950305
-[04:06:26] INFO BEProgMissionLogger | Site : LYON GeodeticPoint: name=LYON, latitude=0.7986434670908332, longitude=0.08449819587312826, altitude=237.0
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.21046719711893194
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 12.058882120862759
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of LYON : 474900.0*0.977933416124129 = 464420.57931734883
-[04:06:26] INFO BEProgMissionLogger | Site : PARIS GeodeticPoint: name=PARIS, latitude=0.8527678725244294, longitude=0.04091837164838106, altitude=0.0
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.21676843530003975
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 12.419916474346929
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of PARIS : 2211000.0*0.976597575600421 = 2159257.2396525308
-[04:06:26] INFO BEProgMissionLogger | Site : RENNES GeodeticPoint: name=RENNES, latitude=0.8392119002241895, longitude=-0.029379650897596147, altitude=47.0
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.31306257544938104
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 17.937164296745436
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of RENNES : 206700.0*0.9513948401153918 = 196653.31345185149
-[04:06:26] INFO BEProgMissionLogger | Site : NICE GeodeticPoint: name=NICE, latitude=0.7627088831215221, longitude=0.1265363707695889, altitude=260.0
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.37956375396638575
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 21.74740115841586
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of NICE : 344900.0*0.9288263597875841 = 320352.21149073774
-[04:06:26] INFO BEProgMissionLogger | Site : LILLE GeodeticPoint: name=LILLE, latitude=0.8837177961500449, longitude=0.0535234885721345, altitude=31.0
-[04:06:26] INFO BEProgMissionLogger | Incidence angle rad : 0.09642463893468736
-[04:06:26] INFO BEProgMissionLogger | Incidence angle deg : 5.52472485203042
-[04:06:26] INFO BEProgMissionLogger |  => Contribution of LILLE : 225800.0*0.9953547453632435 = 224751.10150302039
-[04:06:26] INFO BEProgMissionLogger | Final score :5540367.395363236
-[04:06:26] INFO BEProgMissionLogger | Duration of the score computation : 0.013000000000000001
-[04:06:26] INFO BEProgMissionLogger | Total duration : 27.383
-[04:06:26] INFO BEProgMissionLogger | 
+[06:51:27] INFO BEProgMissionLogger | Nadir_Law_Initial
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_Nadir_to_STRASBOURG
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_STRASBOURG
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_STRASBOURG_to_Nadir
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Nadir_Law_Temp
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_Nadir_to_MARSEILLE
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_MARSEILLE
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_MARSEILLE_to_Nadir
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Nadir_Law_Temp
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_Nadir_to_NANTES
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_NANTES
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_NANTES_to_Nadir
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Nadir_Law_Temp
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_Nadir_to_REIMS
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_REIMS
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_REIMS_to_NICE
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_NICE
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_NICE_to_Nadir
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Nadir_Law_Temp
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_Nadir_to_LILLE
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_LILLE
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_LILLE_to_RENNES
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_RENNES
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_RENNES_to_BORDEAUX
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_BORDEAUX
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_BORDEAUX_to_Nadir
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Nadir_Law_Temp
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_Nadir_to_PARIS
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_PARIS
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_PARIS_to_LYON
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_LYON
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_LYON_to_TOULOUSE
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | OBS_TOULOUSE
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Slew_TOULOUSE_to_Nadir
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | Nadir_Law_Final
+[06:51:27] INFO BEProgMissionLogger | Cinematic is ok
+[06:51:27] INFO BEProgMissionLogger | ==== Is the cinematic plan valid ? => true ==== 
+[06:51:27] INFO BEProgMissionLogger | Plan validity : true
+[06:51:27] INFO BEProgMissionLogger | Number of cities visited : 11
+[06:51:27] INFO BEProgMissionLogger | ==== Evaluation of the final score ====
+[06:51:27] INFO BEProgMissionLogger | Site : NANTES GeodeticPoint: name=NANTES, latitude=0.8240868769264067, longitude=-0.02705260340591211, altitude=27.0
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.061783401828685594
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 3.5399281687445368
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of NANTES : 283300.0*0.9980920126740715 = 282759.4671905645
+[06:51:27] INFO BEProgMissionLogger | Site : REIMS GeodeticPoint: name=REIMS, latitude=0.8595746566072073, longitude=0.0703948883194629, altitude=105.5
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.7895964054697177
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 45.24054155211529
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of REIMS : 181500.0*0.7041319530155999 = 127799.94947233138
+[06:51:27] INFO BEProgMissionLogger | Site : TOULOUSE GeodeticPoint: name=TOULOUSE, latitude=0.7609635538695277, longitude=0.025016327767610324, altitude=189.0
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.10601421707747637
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 6.074167206923132
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of TOULOUSE : 439600.0*0.9943857540607314 = 437131.97748509754
+[06:51:27] INFO BEProgMissionLogger | Site : STRASBOURG GeodeticPoint: name=STRASBOURG, latitude=0.8479385464841611, longitude=0.13526301702956053, altitude=141.5
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.18660669082001158
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 10.691775812889306
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of STRASBOURG : 272100.0*0.9826394368478264 = 267376.19076629356
+[06:51:27] INFO BEProgMissionLogger | Site : MARSEILLE GeodeticPoint: name=MARSEILLE, latitude=0.7556699702482289, longitude=0.09383570737129793, altitude=320.0
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.2529475618151831
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 14.49282773013449
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of MARSEILLE : 851400.0*0.9681789752924083 = 824307.5795639564
+[06:51:27] INFO BEProgMissionLogger | Site : BORDEAUX GeodeticPoint: name=BORDEAUX, latitude=0.7824886995343738, longitude=-0.009890204912398708, altitude=21.5
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.05387071825370449
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 3.0865647952756317
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of BORDEAUX : 235900.0*0.9985493237367659 = 235557.78546950305
+[06:51:27] INFO BEProgMissionLogger | Site : LYON GeodeticPoint: name=LYON, latitude=0.7986434670908332, longitude=0.08449819587312826, altitude=237.0
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.21046719711893194
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 12.058882120862759
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of LYON : 474900.0*0.977933416124129 = 464420.57931734883
+[06:51:27] INFO BEProgMissionLogger | Site : PARIS GeodeticPoint: name=PARIS, latitude=0.8527678725244294, longitude=0.04091837164838106, altitude=0.0
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.21676843530003975
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 12.419916474346929
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of PARIS : 2211000.0*0.976597575600421 = 2159257.2396525308
+[06:51:27] INFO BEProgMissionLogger | Site : RENNES GeodeticPoint: name=RENNES, latitude=0.8392119002241895, longitude=-0.029379650897596147, altitude=47.0
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.31306257544938104
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 17.937164296745436
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of RENNES : 206700.0*0.9513948401153918 = 196653.31345185149
+[06:51:27] INFO BEProgMissionLogger | Site : NICE GeodeticPoint: name=NICE, latitude=0.7627088831215221, longitude=0.1265363707695889, altitude=260.0
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.37956375396638575
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 21.74740115841586
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of NICE : 344900.0*0.9288263597875841 = 320352.21149073774
+[06:51:27] INFO BEProgMissionLogger | Site : LILLE GeodeticPoint: name=LILLE, latitude=0.8837177961500449, longitude=0.0535234885721345, altitude=31.0
+[06:51:27] INFO BEProgMissionLogger | Incidence angle rad : 0.09642463893468736
+[06:51:27] INFO BEProgMissionLogger | Incidence angle deg : 5.52472485203042
+[06:51:27] INFO BEProgMissionLogger |  => Contribution of LILLE : 225800.0*0.9953547453632435 = 224751.10150302039
+[06:51:27] INFO BEProgMissionLogger | Final score :5540367.395363236
+[06:51:27] INFO BEProgMissionLogger | Duration of the score computation : 0.013000000000000001
+[06:51:27] INFO BEProgMissionLogger | Total duration : 19.188
+[06:51:27] INFO BEProgMissionLogger | 
 
 Writing VTS outputs, please wait...
-[04:06:26] INFO BEProgMissionLogger | VTS POI file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Target_Sites_POI.txt
-[04:06:26] INFO BEProgMissionLogger | VTS OEM file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Satellite_Trajectory_OEM.txt
-[04:06:56] INFO BEProgMissionLogger | VTS AEM file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Nadir_Pointing_AEM.txt
-[04:07:30] INFO BEProgMissionLogger | VTS AEM file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Cinematic_Plan_AEM.txt
-[04:07:30] INFO BEProgMissionLogger | VTS MEM file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Cinematic_Plan_Events_MEM.txt
-[04:07:30] INFO BEProgMissionLogger | VTS outputs written
-[04:07:30] INFO BEProgMissionLogger | 
+[06:51:27] INFO BEProgMissionLogger | VTS POI file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Target_Sites_POI.txt
+[06:51:27] INFO BEProgMissionLogger | VTS OEM file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Satellite_Trajectory_OEM.txt
+[06:51:47] INFO BEProgMissionLogger | VTS AEM file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Nadir_Pointing_AEM.txt
+[06:52:08] INFO BEProgMissionLogger | VTS AEM file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Cinematic_Plan_AEM.txt
+[06:52:08] INFO BEProgMissionLogger | VTS MEM file created : ..\Vts-WindowsNT-32bits-3.5.1\Data\BESupaero\Data\BE_Supaero_Cinematic_Plan_Events_MEM.txt
+[06:52:08] INFO BEProgMissionLogger | VTS outputs written
+[06:52:08] INFO BEProgMissionLogger | 
 
 Simulation done
-[04:07:30] INFO BEProgMissionLogger | ##################################################
+[06:52:08] INFO BEProgMissionLogger | ##################################################
