@@ -68,24 +68,24 @@ public class CompleteMission extends SimpleMission {
 	public double ComputeSlewDurationBetweenObs(Map<TargetAccess,AttitudeLawLeg> mapAllAttitudeLegs , TargetAccess currenttargetaccess, TargetAccess othertargetaccess) throws PatriusException {
 		
 		final KeplerianPropagator propagator = createDefaultPropagator();
-		
+		//using the map created in the computeObservationPlan to get the observation leg
     		final AttitudeLeg currentSiteObsLeg = mapAllAttitudeLegs.get(currenttargetaccess);
+		// Getting the end and start dates and the end and start attitudes
     		final AbsoluteDate currentObsEnd = currentSiteObsLeg.getEnd();
     		final Attitude endCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsEnd, this.getEme2000());
-    	
     		final AbsoluteDate currentObsStart = currentSiteObsLeg.getDate();
     		final Attitude startCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsStart, this.getEme2000());
-    	
+    	        //repeating the same operations for the second access will allow us to compare the slews from end to start to each access
     		final AttitudeLeg otherSiteObsLeg = mapAllAttitudeLegs.get(othertargetaccess);
     		final AbsoluteDate otherObsEnd = otherSiteObsLeg.getEnd();
     		final Attitude endOtherObsAttitude = otherSiteObsLeg.getAttitude(propagator, otherObsEnd, this.getEme2000());
-    	
     		final AbsoluteDate otherObsStart = otherSiteObsLeg.getDate();
     		final Attitude startOtherObsAttitude = otherSiteObsLeg.getAttitude(propagator, otherObsStart, this.getEme2000());
 		
 		double slewDurationEndCurrentToStartOther = this.getSatellite().computeSlewDuration(endCurrentObsAttitude, startOtherObsAttitude);
 		double slewDurationEndOtherToStartCurrent = this.getSatellite().computeSlewDuration(endOtherObsAttitude, startCurrentObsAttitude);
-		
+
+		//Criterion to know which slew duration to return 
 		if (otherObsStart.compareTo(currentObsStart)<0) {
 			return slewDurationEndOtherToStartCurrent; 			
 		}
