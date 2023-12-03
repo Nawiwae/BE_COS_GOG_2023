@@ -63,24 +63,25 @@ public class CompleteMission extends SimpleMission {
 	final Frame eme2000 = this.getEme2000();
 	
 	final ExtendedOneAxisEllipsoid earth = this.getEarth();
-	
+
+	//This method uses the law legs associated with the target accesses to compute the duration of the slew from one access to the other
 	public double ComputeSlewDurationBetweenObs(Map<TargetAccess,AttitudeLawLeg> mapAllAttitudeLegs , TargetAccess currenttargetaccess, TargetAccess othertargetaccess) throws PatriusException {
 		
 		final KeplerianPropagator propagator = createDefaultPropagator();
 		
-    	final AttitudeLeg currentSiteObsLeg = mapAllAttitudeLegs.get(currenttargetaccess);
-    	final AbsoluteDate currentObsEnd = currentSiteObsLeg.getEnd();
-    	final Attitude endCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsEnd, this.getEme2000());
+    		final AttitudeLeg currentSiteObsLeg = mapAllAttitudeLegs.get(currenttargetaccess);
+    		final AbsoluteDate currentObsEnd = currentSiteObsLeg.getEnd();
+    		final Attitude endCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsEnd, this.getEme2000());
     	
-    	final AbsoluteDate currentObsStart = currentSiteObsLeg.getDate();
-    	final Attitude startCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsStart, this.getEme2000());
+    		final AbsoluteDate currentObsStart = currentSiteObsLeg.getDate();
+    		final Attitude startCurrentObsAttitude = currentSiteObsLeg.getAttitude(propagator, currentObsStart, this.getEme2000());
     	
-    	final AttitudeLeg otherSiteObsLeg = mapAllAttitudeLegs.get(othertargetaccess);
-    	final AbsoluteDate otherObsEnd = otherSiteObsLeg.getEnd();
-    	final Attitude endOtherObsAttitude = otherSiteObsLeg.getAttitude(propagator, otherObsEnd, this.getEme2000());
+    		final AttitudeLeg otherSiteObsLeg = mapAllAttitudeLegs.get(othertargetaccess);
+    		final AbsoluteDate otherObsEnd = otherSiteObsLeg.getEnd();
+    		final Attitude endOtherObsAttitude = otherSiteObsLeg.getAttitude(propagator, otherObsEnd, this.getEme2000());
     	
-    	final AbsoluteDate otherObsStart = otherSiteObsLeg.getDate();
-    	final Attitude startOtherObsAttitude = otherSiteObsLeg.getAttitude(propagator, otherObsStart, this.getEme2000());
+    		final AbsoluteDate otherObsStart = otherSiteObsLeg.getDate();
+    		final Attitude startOtherObsAttitude = otherSiteObsLeg.getAttitude(propagator, otherObsStart, this.getEme2000());
 		
 		double slewDurationEndCurrentToStartOther = this.getSatellite().computeSlewDuration(endCurrentObsAttitude, startOtherObsAttitude);
 		double slewDurationEndOtherToStartCurrent = this.getSatellite().computeSlewDuration(endOtherObsAttitude, startCurrentObsAttitude);
